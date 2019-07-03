@@ -8,6 +8,7 @@ public class Main extends JFrame{
 
     public static void main(String[] args) {
 	    Graph g = new Graph();
+	    /*
 	    try {
             g.addE(5, 5);
             g.addE(0, 1);
@@ -24,14 +25,8 @@ public class Main extends JFrame{
         }
         TopSort t = new TopSort(g);
         t.Alg();
-        new Main();
-    }
-    Main(){
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Алгоритм ТопСорт");      //Имя окна
-        setSize( WINDOW_SIZE );                            //Размер окна
-        setResizable(false);
-        add( new Window(), BorderLayout.WEST );  // Размещение панельки с кнопками и изображением графа слева
-        setVisible(true);
+        */
+	    Window w = new Window();
+	    w.setVisible(true);
     }
 }
