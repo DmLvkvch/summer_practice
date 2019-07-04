@@ -8,6 +8,11 @@ public class Graph {
     private int VCount = 0;
     private int ECount = 0;
     private HashMap<Integer, Vertex> graph = new HashMap<>();//список смежности
+
+    public LinkedList<Integer> getVertexes() {
+        return vertexes;
+    }
+
     private LinkedList<Integer> vertexes = new LinkedList<>();
 
     public Graph(){}
@@ -91,9 +96,10 @@ public class Graph {
 
     public Edge checkE(int v1, int v2) {
         if (checkV(v1)!= null && checkV(v2)!=null) {
-            Integer i = graph.get(v1).way.get(v2);
-            return i==null ? null : new Edge(v1,v2);
+            boolean i = graph.get(v1).way.contains((Integer)v2);
+            return i == false ? null : new Edge(v1,v2);
         }
         return null;
     }
+
 }

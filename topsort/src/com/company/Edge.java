@@ -5,7 +5,6 @@ public class Edge {
             this.v1 = v1;
             this.v2 = v2;
         }
-
         public int v1;
         public int v2;
 }
