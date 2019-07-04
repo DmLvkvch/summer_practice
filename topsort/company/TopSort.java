@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class TopSort {
@@ -8,7 +9,7 @@ public class TopSort {
     private int E;
     private boolean[] used;
     private Stack<Integer> stack;
-
+    public LinkedList<Integer> ans = new LinkedList<>();
     public TopSort(Graph g){
         graph = g;
         V = g.V();
@@ -36,7 +37,8 @@ public class TopSort {
         }
         int k = stack.size();
         for(int i = 0;i<k;i++) {
-            System.out.print(stack.peek() + " ");
+            ans.add(stack.peek());
+            System.out.println(stack.peek());
             stack.pop();
         }
     }

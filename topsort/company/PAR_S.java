@@ -14,7 +14,7 @@ public class PAR_S {
     public final static Color BUTTENS_BORDER = new Color(16, 77, 80);
     public final static Color BACKGROUND = new Color(225, 219, 180);
     public final static Color BASE_EDGE_COLOR = new Color(241, 237, 226);
-    public final static Color EDGE_LINE_COLOR = new Color(225, 219, 180);
+    public final static Color EDGE_LINE_COLOR = new Color(0, 0, 0);
     public final static Color EDGE_CIRKLE_LINE_COLOR = new Color(0, 0, 0);
     public final static Color CREATE_BUTTONS_BG = new Color(127, 186, 189);
     public final static Color RESULT_EDGE_COLOR = new Color(203, 138, 82);
@@ -25,7 +25,7 @@ public class PAR_S {
     public final static Color GRAPH_FIELD_BACKGROUND = new Color(50, 119, 123);
 
     // Целочисленные константы
-    public final static int VERTEX_R = 25;
+    public final static int VERTEX_R = 15;
     public final static int TEXT_SIZE = 14;
     public final static int EDJE_CIRKLE_R = 28;
     public final static int VERTEX_D = VERTEX_R*2;

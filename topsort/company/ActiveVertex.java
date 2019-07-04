@@ -20,13 +20,14 @@ import java.util.Random;
         private boolean flagCanMove = false;
 
 
-        ActiveVertex( JFrame parent, int v ) {
+        ActiveVertex( JFrame parent, int v, int x, int y ) {
             this.parent = parent;
             this.v = v;
 
-            Random random = new Random();
-            point = new Point(random.nextInt(600 - VERTEX_D)+ VERTEX_R,
-                    random.nextInt(500- VERTEX_D)+ VERTEX_R);
+            //Random random = new Random();
+         //   point = new Point(random.nextInt(600 - VERTEX_D)+ VERTEX_R,
+            //        random.nextInt(500- VERTEX_D)+ VERTEX_R);
+            point = new Point(x, y);
 
             setSize(new Dimension( VERTEX_D, VERTEX_D));
             setLocation(point.x- VERTEX_R, point.y- VERTEX_R);
@@ -63,7 +64,6 @@ import java.util.Random;
                 else point.y = y;
 
                 setLocation(point.x- VERTEX_R, point.y- VERTEX_R);
-                parent.repaint();
             }
         }
 
