@@ -17,7 +17,7 @@ public class Main extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         setTitle("TopSort");      //Имя окна
-        setSize( 1400, 800);                            //Размер окна
+        setSize( 1550, 800);                            //Размер окна
 
         setResizable(false);
 
