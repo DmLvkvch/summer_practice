@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="topsort:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/topsort_jar</output-path>
+    <root id="archive" name="topsort.jar">
+      <element id="module-output" name="topsort" />
+    </root>
+  </artifact>
+</component>

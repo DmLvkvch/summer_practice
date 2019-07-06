@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class TopSort {
@@ -8,11 +9,15 @@ public class TopSort {
     private int E;
     private boolean[] used;
     private Stack<Integer> stack;
-
+    public LinkedList<Integer> ans = new LinkedList<>();
     public TopSort(Graph g){
         graph = g;
-        V = g.V();
-        E = g.E();
+        init();
+    }
+
+    void init(){
+        V = graph.V();
+        E = graph.E();
         used = new boolean[V+1];
         stack = new Stack<>();
         for(int i = 0;i<V+1;i++)
@@ -29,14 +34,18 @@ public class TopSort {
         stack.push(pos);
     }
 
-    void Alg(){
+    void Alg(Graph g){
+        graph = g;
+        init();
         for(int i = 0;i<V;i++){
-            if(!used[i])
+            if(!used[i]) {
                 DFS(i);
+            }
         }
         int k = stack.size();
         for(int i = 0;i<k;i++) {
-            System.out.print(stack.peek() + " ");
+            ans.add(stack.peek());
+            System.out.println(stack.peek());
             stack.pop();
         }
     }

@@ -2,95 +2,124 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.awt.geom.Point2D;
 import java.util.HashMap;
-import java.util.Scanner;
+import java.util.LinkedList;
+import java.util.Random;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.concurrent.TimeUnit;
 
 import static com.company.PAR_S.*;
 
-public class GraphField extends JPanel{
-    private Graph g = new Graph();
-    int maxV = 0;
-    HashMap<Integer, ActiveVertex> points = new HashMap<Integer, ActiveVertex>();
-
-    private int emptyPoint(){
-        int i;
-        for(i = 0; points.containsKey(i); i++){};
-        return i;
-    }
-
-    GraphField() {
-
+public class GraphField extends JPanel implements MouseListener, MouseMotionListener{
+    private int z = 0;
+    HashMap<Integer, ActiveVertex> points = new HashMap<>();
+    HashMap<Integer, ActiveVertex> sort_points = new HashMap<>();
+    Graph graph;
+    TopSort sort;
+    private boolean flag = false;
+    GraphField(Graph graph, TopSort sort){
+        flag = false;
+        addMouseMotionListener(this);
+        addMouseListener(this);
         setLayout(null);
-        setPreferredSize( SIZE_OF_GRAPH_FIELD );    //Размер рамки
-        fitchaForFastCreateGraphFromFile();
-    }
-
-
-    public void addV() {
-        int n = emptyPoint();
-        if (n > maxV){maxV = n;}
-        g.addV(n);
-        points.put(n, new ActiveVertex(this, n));
-        add(points.get(n));
+        setPreferredSize(new Dimension(900, 600));
+        this.graph = graph;
+        this.sort = sort;
+        for(int i = 0;i<graph.VertexList().size();i++){
+            Random r = new Random();
+            points.put(i, new ActiveVertex(this, i, r.nextInt(600 - VERTEX_D) + VERTEX_R, r.nextInt(500 - VERTEX_D) + VERTEX_R, graph));
+            add(points.get(i));
+        }
 
     }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        graph.addV(graph.V());
+        points.put(graph.V()-1, new ActiveVertex(this,graph.V()-1, e.getX(), e.getY(), graph));
+        add(points.get(graph.V()-1));
+        repaint();
+    }
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+    @Override
+    public void mouseMoved(MouseEvent e) {
+
+    }
+
     public void addE(Edge edge){
-        try {
-            g.addE(edge.v1, edge.v2);
-        }
-        catch (RuntimeException exception) {
-            JOptionPane.showMessageDialog(this,
-                    "Ошибка: " + exception.getLocalizedMessage(),
-                    "Ошибка добавления ребра",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
+        graph.addE(edge.v1, edge.v2);
         repaint();
     }
 
-    public void removeV(Vertex v) {
-
-
-            g.removeV(v.v);
-            remove(points.get(v.v));
-            points.remove(v.v);
-
-        repaint();
-    }
-    public void removeE(Edge edge) {
-        try {
-            g.removeE(edge.v1, edge.v2);
-        } catch (RuntimeException exception) {
-            JOptionPane.showMessageDialog(this,
-                    "Ошибка: " + exception.getLocalizedMessage(),
-                    "Ошибка удаления ребра",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
+    void foo(boolean bool){
+        if(bool==true){
+            flag = true;
+            repaint();
         }
-
-        repaint();
     }
 
     @Override
     public void paint(Graphics g) {
+        g.setColor(new Color(255,255,255));
+        g.fillRect(0,0, 900,600);
+            if (points.size() > graph.VertexList().size()) {
+                int k = points.size();
+                for (int i = 0; i < k; i++) {
+                    if (!graph.VertexList().contains((Integer) i)) {
+                        points.remove(i);
+                    }
+                }
+            }
+            for (int i = 0; i < graph.VertexList().size(); i++) {
+                Random r = new Random();
+                if (!points.containsKey(i)) {
+                    points.put(i, new ActiveVertex(this, i, r.nextInt(600 - VERTEX_D) + VERTEX_R, r.nextInt(500 - VERTEX_D) + VERTEX_R, graph));
+                    add(points.get(i));
+                }
 
-        g.setColor( GRAPH_FIELD_BACKGROUND );
-        g.fillRect(0,0,100000,100000);
+            }
+            drawGraph(g, points);
+            if(flag == true) {
+               // g.setColor(new Color(0, 0, 0));                // Цвет рамки
+                //((Graphics2D) g).setStroke(new BasicStroke(4));  // Толщина рамки
+                //g.drawRect(0, 0, 900, 600);
+                drawGraph(g, sort_points);
+                sort.Alg(graph);
+                int x = 100;
+                LinkedList<Integer> l = sort.ans;
+                for (int i = 0; i < sort.ans.size(); i++) {
+                    sort_points.put(l.get(i), new ActiveVertex(this, i, x, 550, graph));
+                    x += 100;
+                }
+                drawGraph(g, sort_points);
+                flag = false;
+            }
 
-        drawGraph(g);
-
-        g.setColor( GRAPH_FIELD_BORDER );                // Цвет рамки
-        ((Graphics2D)g).setStroke(new BasicStroke(4));  // Толщина рамки
-        g.drawRect( 0, 0,
-                SIZE_OF_GRAPH_FIELD.width,
-                SIZE_OF_GRAPH_FIELD.height);        // Нарисовать рамку
     }
 
     // Отрисовка графа
-    private void drawGraph(Graphics g) {
+    private void drawGraph(Graphics g,HashMap<Integer, ActiveVertex> points) {
         Edge edge;
 
         ActiveVertex i;
@@ -100,47 +129,80 @@ public class GraphField extends JPanel{
             for ( ; !points.containsKey(av); av++) {};
             i = points.get(av);
             av++;
-            boolean inRes = this.g.checkV(i.v) != null ? true : false;
 
-            for (int j = i.v; j < maxV+1; j++) {
-                if ( ( edge = this.g.checkE(i.v,j)) != null ) {
+           // boolean inRes = graph.checkV(i.v)!=null ? true : false;
+            for (int j = 0; j < graph.V()+1; j++) {
+                if ( ( edge = graph.checkE(i.v,j)) != null ) {
                     Color color;
-                    if (inRes && (this.g.checkE(i.v,j)!= null) ) color = RESULT_EDGE_COLOR;
-                    else color = BASE_EDGE_COLOR;
-                    drawEdge(g, edge, color);
+                    //if (inRes && (graph.checkE(i.v,j)!= null) ) color = RESULT_EDGE_COLOR;
+                    //else
+                        color = BASE_EDGE_COLOR;
+                    drawEdge(g, edge, color, points);
                 }
-                g.setColor(inRes ? RESULT_VERTEX_COLOR : BASE_VERTEX_COLOR);
-                drawVertex(g, i.v);
+                g.setColor(/*inRes ? RESULT_VERTEX_COLOR :*/ BASE_VERTEX_COLOR);
+                drawVertex(g, i.v, points);
             }
         }
     }
 
     //Отрисовка ребра
-    private void drawEdge(Graphics g, Edge edge, Color color){
-
+    private void drawEdge(Graphics g, Edge edge, Color color,HashMap<Integer, ActiveVertex> points){
         Point v1 = new Point(points.get(edge.v1).point.x, points.get(edge.v1).point.y);
         Point v2 = new Point(points.get(edge.v2).point.x, points.get(edge.v2).point.y);
 
         ((Graphics2D)g).setStroke( EDGE_LINE_THIKNESS );  // Устанавливаем толщину ребра
 
         g.setColor( EDGE_LINE_COLOR );
-        g.drawLine(v1.x, v1.y, v2.x, v2.y);
+        if(flag==false) {
+            g.drawLine(v1.x, v1.y, v2.x, v2.y);
+            drawArrow(g, v1, v2);
+        }else {
+            if(z%2==0) {
+                g.drawArc(v1.x, 500, v2.x - v1.x, 100, 0, 180);
+                z++;
+            }
+            else{
+                g.drawArc(v1.x, 500, v2.x - v1.x, 100, 0, -180);
+                z++;
+            }
 
-        int x = (v1.x+v2.x)/2;
-        int y = (v1.y+v2.y)/2;
+        }
+    }
 
-        g.setColor(color);
-        g.fillOval(x-14, y-14, EDJE_CIRKLE_R, EDJE_CIRKLE_R);
+    private double computeEdgeAngle(Point sourse, Point drain){
+        return Math.atan2((double)(drain.y - sourse.y), (double)(drain.x - sourse.x));
+    }
+    private Point computeA(Point sourse, Point drain) {
+        double edgeAngle = computeEdgeAngle(sourse, drain);
+        return new Point((int)(drain.x - VERTEX_R * Math.cos(edgeAngle)),
+                (int)(drain.y - VERTEX_R * Math.sin(edgeAngle)));
+    }
 
-        ((Graphics2D)g).setStroke( EDGE_CIRKLE_LINE_THKNESS);
-        g.setColor( EDGE_CIRKLE_LINE_COLOR );
-        g.drawOval(x-14, y-14,  EDJE_CIRKLE_R, EDJE_CIRKLE_R);
+    private Point computeB(Point sourse, Point drain, double angle, double length) {
+        Point arrowTop = computeA(sourse, drain);
+        double edgeAngle = computeEdgeAngle(sourse, drain);
+        return new Point((int)(arrowTop.x - length * Math.cos(edgeAngle + angle)),
+                (int)(arrowTop.y - length * Math.sin( edgeAngle + angle)));
+    }
+    private Point computeC(Point sourse, Point drain, double angle, double length) {
+        Point arrowTop = computeA(sourse, drain);
+        double edgeAngle = computeEdgeAngle(sourse, drain);
+        return new Point((int)(arrowTop.x - length * Math.cos(edgeAngle - angle)),
+                (int)(arrowTop.y - length * Math.sin( edgeAngle - angle)));
+    }
 
-        drawInt(g, x, y, 0);
+    private void drawArrow(Graphics g, Point source, Point drain) {
+        double angle = Math.PI / 10;
+        double length = 40;
+        Point arrowTop = computeA(source, drain);
+        Point arrowEnd1 = computeB(source, drain, angle, length);
+        Point arrowEnd2 = computeC(source, drain, angle, length);
+        g.drawLine(arrowTop.x, arrowTop.y, arrowEnd1.x, arrowEnd1.y);
+        g.drawLine(arrowTop.x, arrowTop.y, arrowEnd2.x, arrowEnd2.y);
     }
 
     // Отрисовка вершины
-    private void drawVertex(Graphics g, int v) {
+    private void drawVertex(Graphics g, int v,HashMap<Integer, ActiveVertex> points) {
         drawCircle(g, points.get(v).point.x,  points.get(v).point.y, VERTEX_R);
         drawInt(g, points.get(v).point.x, points.get(v).point.y, v);
     }
@@ -167,29 +229,5 @@ public class GraphField extends JPanel{
         ((Graphics2D)g).setStroke(new BasicStroke(2));
         g.setColor( CIRCLE_BORDERLINE_COLOR );
         g.drawOval(cX-rad, cY-rad, rad*2, rad*2);
-    }
-
-    //Фича: найдя файл начнёт строить граф из него
-    private void fitchaForFastCreateGraphFromFile()  {
-        try (FileInputStream file = new FileInputStream("FastGraph.txt");) {
-            Scanner scanner = new Scanner(file);
-
-            int kolV = scanner.nextInt();
-
-            HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-
-            for (int i=0; i < kolV; i++) {
-                map.put( scanner.nextInt(), i);
-                addV();
-            }
-
-            while (scanner.hasNext()) {
-                int v1 = scanner.nextInt();
-                int v2 = scanner.nextInt();
-                int weight = scanner.nextInt();
-
-                addE(new Edge(map.get(v1).intValue(), map.get(v2).intValue()));
-            }
-        } catch (IOException e) { }
     }
 }

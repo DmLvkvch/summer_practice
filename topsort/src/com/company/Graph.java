@@ -31,6 +31,12 @@ public class Graph {
         ECount++;
     }
 
+    public  void clear(){
+        graph.clear();
+        VCount = ECount = 0;
+        vertexes.clear();
+    }
+
     public void removeV(int v){
         if(graph.containsKey(v)) {
             graph.remove(v);
@@ -72,6 +78,10 @@ public class Graph {
     }
 
     public LinkedList<Integer> VertexList(){
+        for(int i = 0;i<vertexes.size();i++){
+            if(!vertexes.contains(i))
+                vertexes.add(i);
+        }
         return vertexes;
     }
 
@@ -91,8 +101,8 @@ public class Graph {
 
     public Edge checkE(int v1, int v2) {
         if (checkV(v1)!= null && checkV(v2)!=null) {
-            Integer i = graph.get(v1).way.get(v2);
-            return i==null ? null : new Edge(v1,v2);
+            boolean i = graph.get(v1).way.contains((Integer)v2);
+            return i == false ? null : new Edge(v1,v2);
         }
         return null;
     }
