@@ -31,10 +31,16 @@ public class Graph {
         ECount++;
     }
 
+    public  void clear(){
+        graph.clear();
+        VCount = ECount = 0;
+        vertexes.clear();
+    }
+
     public void removeV(int v){
         if(graph.containsKey(v)) {
             graph.remove(v);
-            vertexes.remove(new Integer(v));
+            vertexes.remove((Integer)v);
             for (Map.Entry<Integer, Vertex> k :
                     graph.entrySet()) {
                 if (k.getValue().way.contains(v)) {
@@ -91,8 +97,8 @@ public class Graph {
 
     public Edge checkE(int v1, int v2) {
         if (checkV(v1)!= null && checkV(v2)!=null) {
-            Integer i = graph.get(v1).way.get(v2);
-            return i==null ? null : new Edge(v1,v2);
+            boolean i = graph.get(v1).way.contains((Integer)v2);
+            return i == false ? null : new Edge(v1,v2);
         }
         return null;
     }

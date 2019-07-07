@@ -7,78 +7,62 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Random;
 
 import static com.company.PAR_S.*;
 
-public class Window extends JFrame{
+public class Window extends JPanel{
     public String input = new String();
-    public JTextPane textField;
-    public JTextPane textArea;
-    public JButton addEdge;
-    public JButton CreateGraph;
-    public JButton Step;
-    public JButton RunAlg;
-    public JButton readFromFile;
-    public JButton readFromField;
-    public JPanel rootPanel;
+    HashMap<Integer, ActiveVertex> points = new HashMap<>();
+    HashMap<Integer, ActiveVertex> sort_points = new HashMap<>();
+    Graph graph;
+    TopSort sort;
+    private boolean flag = false;
+    public SourceGraphField graphField;
+    public SortedGraphField sortedGraphField;
+    ///////////////////////////////
 
-    public Window() {
-        this.setSize(1050,700);
-        this.setResizable(false);
-        this.setMinimumSize(new Dimension(1400,700));
-        this.setTitle("TopSort");
-        this.rootPanel = new JPanel();
-        rootPanel.setLayout(null);      //абсолютное позиционирование
-        rootPanel.setBounds(0,0,1400,700);
+    public Window(Graph graph, TopSort sort) {
+        this.sort = sort;
+        this.graph = graph;
+        graphField = new SourceGraphField(graph);
+        //new SourceGraphField(graph);
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new GridBagLayout());
 
-        this.setBounds(300,100,750,700);
-        setContentPane(rootPanel);
-        addEdge = new JButton("add edge");
-        CreateGraph = new JButton("make graph");
-        Step = new JButton("next step");
-        RunAlg = new JButton("run alg");
-        readFromFile = new JButton("read form file");
-        textField = new JTextPane();
-        readFromField = new JButton("read from field");
-        textArea = new JTextPane();
-        textArea.setBounds(100,500,563,100);
-        textField.setBounds(1000,100,363,100);
-        this.addEdge.setBounds(1200,350,163,24);
-        this.CreateGraph.setBounds(1200,400,163,24);
-        this.Step.setBounds(1200,450,163,24);
-        this.RunAlg.setBounds(1200,500,163,24);
-        this.readFromField.setBounds(1200,550,163,24);
-        this.readFromFile.setBounds(1200,600,163,24);
-        rootPanel.add(addEdge);
-        rootPanel.add(CreateGraph);
-        rootPanel.add(Step);
-        rootPanel.add(RunAlg);
-        rootPanel.add(readFromFile);
-        rootPanel.add(readFromField);
-        rootPanel.add(textField);
-        rootPanel.add(textArea);
-        readFromFile.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fd = new JFileChooser();//диалоговое окно
-                int ret = fd.showDialog(null, "Open file");
-                if (ret == JFileChooser.APPROVE_OPTION) {
-                    File file = fd.getSelectedFile();       //получение выбранного файла
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weightx = 0.5;
+        constraints.weighty   = 0.3;
+        constraints.gridheight = 1;
+        constraints.gridy   = 0  ;
+        constraints.gridx = 0;
+        contentPanel.add(graphField, constraints);
 
-                    try(BufferedReader reader =new BufferedReader(new FileReader(file)))
-                    {
-                        // читаем из файла построчно
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            input+=line+' ';
-                            textField.setText(input);
-                        }
-                    }
-                    catch(IOException ex){
-                    }
-                }
-            }
-        });
+        LeftControlPanel leftPanel = new LeftControlPanel();
+
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.weighty   = 0.3;
+        constraints.gridx     = 0;
+        constraints.gridy     = 1;
+        sortedGraphField = new SortedGraphField(graph);
+        contentPanel.add(sortedGraphField, constraints);
+
+        constraints.weighty   = 0.0;
+        constraints.gridx     = 0;
+        constraints.gridy     = 2;
+        contentPanel.add(leftPanel, constraints);
+
+        RigthControlPanel cp  = new RigthControlPanel(this.graph, contentPanel, graphField, sortedGraphField);
+        constraints.gridx = 1;      // первая ячейка таблицы по горизонтали
+        constraints.gridy = 0;
+        constraints.gridheight = 3;
+        contentPanel.add(cp, constraints);
+
+        this.add(contentPanel);
     }
 
 
