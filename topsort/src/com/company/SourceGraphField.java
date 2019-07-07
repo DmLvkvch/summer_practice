@@ -57,6 +57,7 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
         Point v1 = new Point(points.get(edge.v1).point.x, points.get(edge.v1).point.y);
         Point v2 = new Point(points.get(edge.v2).point.x, points.get(edge.v2).point.y);
         ((Graphics2D)g).setStroke( EDGE_LINE_THIKNESS );  // Устанавливаем толщину ребра
+
         g.setColor( EDGE_LINE_COLOR );
         g.drawLine(v1.x, v1.y, v2.x, v2.y);
         drawArrow(g, v1, v2);

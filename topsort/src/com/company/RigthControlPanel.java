@@ -118,6 +118,11 @@ public class RigthControlPanel extends JPanel {
     private void foo() {
         System.out.println("foo called");
         this.sortedGraphField.setGraph(graph);
+        TopSort sort = new TopSort(graph);
+        sort.alg(graph);
+        if(sort.alg()==false){
+            System.out.println("CYCLE");
+        }
         this.sortedGraphField.repaint();
 
     }

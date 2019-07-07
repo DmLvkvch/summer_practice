@@ -23,7 +23,7 @@ public class TopSort {
         for(int i = 0;i<graph.VertexList().size()+1;i++)
             used[i] = false;
     }
-
+/*
     private void DFS(int pos){
         used[pos] = true;
         System.out.println(pos);
@@ -49,8 +49,46 @@ public class TopSort {
             stack.pop();
         }
     }
+
+ */
+    boolean alg(){
+        boolean Cycle = false;
+        for(int i = 0;i<graph.V();i++){
+            Cycle = DFS(graph.VertexList().get(i));
+            if(Cycle) {
+                return false;
+            }
+        }
+        int k = stack.size();
+        for(int i = 0;i<k;i++){
+            ans.add(stack.peek());
+            stack.pop();
+        }
+        return true;
+    }
+
+    boolean DFS(int v){
+        if(graph.checkV(v).c == 1)
+            return true;
+        if(graph.checkV(v).c == 2)
+            return false;
+        graph.checkV(v).c = 1;
+        for(int i = 0;i<graph.checkV(v).way.size();i++){
+            if(DFS(graph.checkV(v).way.get(i)))
+                return true;
+        }
+        stack.push(v);
+        graph.checkV(v).c = 2;
+        return false;
+    }
+
     void alg(Graph g){
         graph = g;
+        ans.clear();
+        stack.clear();
+        for(int i = 0;i<graph.V();i++){
+            graph.checkV(graph.VertexList().get(i)).c = 0;
+        }
         alg();
     }
 }
