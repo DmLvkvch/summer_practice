@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.Random;
 import java.util.Stack;
 
 import static com.company.PAR_S.*;
@@ -82,13 +81,11 @@ public class ActiveVertex extends JPanel implements MouseListener, MouseMotionLi
         if(stack.size()==2) {
             int k = stack.peek().v;
             stack.pop();
-
             if (k == stack.peek().v) {
                 graph.removeV(stack.peek().v);
                 stack.pop();
                 parent.repaint();
             } else {
-
                 graph.addE(stack.peek().v, k);
                 stack.pop();
                 parent.repaint();

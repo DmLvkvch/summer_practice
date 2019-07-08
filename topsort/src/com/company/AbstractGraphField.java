@@ -1,12 +1,7 @@
 package com.company;
-
 import javax.swing.*;
 import java.awt.*;
-
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Random;
-
 import static com.company.PAR_S.*;
 
 public abstract class AbstractGraphField extends JPanel  {
@@ -18,7 +13,7 @@ public abstract class AbstractGraphField extends JPanel  {
         setLayout(null);
         this.graph = graph;
     }
-
+    //максимальный номер вершины ищем ( для добавления например)
     private int max(Graph graph) {
         int max = -1;
         for (int i = 0; i < graph.VertexList().size(); i++) {
@@ -37,10 +32,12 @@ public abstract class AbstractGraphField extends JPanel  {
         for (int w = 0; w < points.size(); w++) {
 
             for ( ; !points.containsKey(av); av++) {};
+            //выбираем из мапы вершин первую, которая там содержится
             i = points.get(av);
             av++;
 
             // boolean inRes = graph.checkV(i.v)!=null ? true : false;
+            //проходим по всем вершинам
             for (int j = 0; j < max(graph)+1; j++) {
                 if ( ( edge = graph.checkE(i.v, j)) != null ) {
                     Color color;

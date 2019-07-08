@@ -51,6 +51,8 @@ public class TopSort {
     }
 
  */
+
+
     boolean alg(){
         boolean Cycle = false;
         for(int i = 0;i<graph.V();i++){
@@ -67,19 +69,31 @@ public class TopSort {
         return true;
     }
 
+
+
     boolean DFS(int v){
-        if(graph.checkV(v).c == 1)
+        if(graph.checkV(v).c == 1) {
+            System.out.println("CYCLE: "+v);
             return true;
-        if(graph.checkV(v).c == 2)
+        }
+        if(graph.checkV(v).c == 2) {
             return false;
+        }
         graph.checkV(v).c = 1;
+        System.out.println("красим "+v+" в серый цвет");
         for(int i = 0;i<graph.checkV(v).way.size();i++){
-            if(DFS(graph.checkV(v).way.get(i)))
+            if(DFS(graph.checkV(v).way.get(i))) {
                 return true;
+            }
         }
         stack.push(v);
         graph.checkV(v).c = 2;
+        System.out.println("красим "+v+" в черный цвет");
         return false;
+    }
+
+    boolean dfs(int v){
+        
     }
 
     void alg(Graph g){

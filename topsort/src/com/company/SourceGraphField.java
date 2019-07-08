@@ -32,6 +32,7 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
     public void paint(Graphics g) {
         g.setColor(new Color(255,255,255));
         g.fillRect(0,0, 900,600);
+        //добавление вершин в мапу вершин
         for (int i = 0; i < graph.VertexList().size(); i++) {
             Random r = new Random();
             if (!points.containsKey(graph.VertexList().get(i))) {
@@ -39,6 +40,7 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
                 add(points.get(graph.VertexList().get(i)));
             }
         }
+        //если удалили в графе вершину, то и из мапы даляем, чтоб не рисовалась
         while(points.size()>graph.VertexList().size())
             if (points.size() > graph.VertexList().size()) {
                 for (Map.Entry<Integer, ActiveVertex> k:
@@ -57,22 +59,23 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
         Point v1 = new Point(points.get(edge.v1).point.x, points.get(edge.v1).point.y);
         Point v2 = new Point(points.get(edge.v2).point.x, points.get(edge.v2).point.y);
         ((Graphics2D)g).setStroke( EDGE_LINE_THIKNESS );  // Устанавливаем толщину ребра
-
         g.setColor( EDGE_LINE_COLOR );
-        g.drawLine(v1.x, v1.y, v2.x, v2.y);
         drawArrow(g, v1, v2);
     }
 
     @Override
     void drawArrow(Graphics g, Point source, Point drain){
-        double angle = Math.PI / 10;
-        double length = 40;
+        double arrowAngle = Math.PI / 10;
+        double length = 20;
         Point arrowTop = computeA(source, drain);
-        Point arrowEnd1 = computeB(source, drain, angle, length);
-        Point arrowEnd2 = computeC(source, drain, angle, length);
+        Point arrowEnd1 = computeB(source, drain, arrowAngle, length);
+        Point arrowEnd2 = computeC(source, drain, arrowAngle, length);
         g.drawLine(arrowTop.x, arrowTop.y, arrowEnd1.x, arrowEnd1.y);
         g.drawLine(arrowTop.x, arrowTop.y, arrowEnd2.x, arrowEnd2.y);
-        g.drawLine(source.x, source.y, drain.x, drain.y);
+
+        double edgeAngle = computeEdgeAngle(source, drain);
+        g.drawLine(source.x + (int)(VERTEX_R * Math.cos(edgeAngle)),
+                source.y + (int)(VERTEX_R * Math.sin(edgeAngle)), arrowTop.x, arrowTop.y);
     }
 
     private double computeEdgeAngle(Point sourse, Point drain){
@@ -123,13 +126,22 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
         return max;
     }
 
+    boolean onEdge(int x, int y){
+    return true;
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
-        int x = max(graph)+1;
-        graph.addV(x);
-        points.put(x, new ActiveVertex(this,x, e.getX(), e.getY(), graph));
-        add(points.get(x));
-        repaint();
+        //int x = e.getX();
+        //int y = e.getY();
+
+            int x = max(graph) + 1;
+            graph.addV(x);
+            points.put(x, new ActiveVertex(this, x, e.getX(), e.getY(), graph));
+            add(points.get(x));
+            repaint();
+
+
     }
 
     @Override

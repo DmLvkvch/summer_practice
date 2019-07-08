@@ -2,25 +2,10 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Random;
-
-import static com.company.PAR_S.*;
 
 public class Window extends JPanel{
-    public String input = new String();
-    HashMap<Integer, ActiveVertex> points = new HashMap<>();
-    HashMap<Integer, ActiveVertex> sort_points = new HashMap<>();
     Graph graph;
     TopSort sort;
-    private boolean flag = false;
     public SourceGraphField graphField;
     public SortedGraphField sortedGraphField;
     ///////////////////////////////
@@ -50,7 +35,10 @@ public class Window extends JPanel{
         constraints.gridy     = 1;
         sortedGraphField = new SortedGraphField(graph);
         contentPanel.add(sortedGraphField, constraints);
-
+        JScrollPane jScrollPane = new JScrollPane(sortedGraphField);
+        jScrollPane.setPreferredSize(new Dimension(900,150));
+        jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        contentPanel.add(sortedGraphField, constraints);;
         constraints.weighty   = 0.0;
         constraints.gridx     = 0;
         constraints.gridy     = 2;

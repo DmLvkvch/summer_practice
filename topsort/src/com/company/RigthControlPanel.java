@@ -28,41 +28,66 @@ public class RigthControlPanel extends JPanel {
         this.setPreferredSize(new Dimension(630,700));
         //this.setBackground(Color.BLUE);
 
+
+
         JLabel textFieldLabel = new JLabel("Enter data:", SwingConstants.CENTER);
         JTextPane textArea = new JTextPane();
+        JScrollPane jsp = new JScrollPane(textArea);
         JButton addEdge = new JButton("add edge");
         JButton step = new JButton("next step");
         JButton runAlg = new JButton("run alg");
         JButton readFromFile = new JButton("read form file");
         JButton CreateGraph = new JButton("create graph");
+        JButton toStartButton = new JButton("Go back to start");
+
 
 
         textFieldLabel.setSize(550, 25);
         textFieldLabel.setLocation((getPreferredSize().width - textFieldLabel.getSize().width) / 2,0);
 
-        textArea.setSize(550, 100);
-        textArea.setLocation((getPreferredSize().width - textArea.getSize().width) / 2, textFieldLabel.getSize().height);
 
-        Dimension buttonSize = new Dimension((textArea.getWidth()- 10) / 2, 25);
+        jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        jsp.setSize(550, 250);
+        jsp.setLocation((getPreferredSize().width - jsp.getSize().width) / 2, textFieldLabel.getSize().height);
+
+        //textArea.setSize(550, 100);
+        //textArea.setLocation((getPreferredSize().width - textArea.getSize().width) / 2, textFieldLabel.getSize().height);
+
+        Dimension buttonSize = new Dimension((jsp.getWidth()- 10) / 2, 25);
         readFromFile.setSize(buttonSize);
-        readFromFile.setLocation(textArea.getX(), textArea.getY() + textArea.getHeight() + 10);
+        readFromFile.setLocation(jsp.getX(), jsp.getY() + jsp.getHeight() + 10);
 
         CreateGraph.setSize(buttonSize);
-        CreateGraph.setLocation(textArea.getLocation().x + readFromFile.getWidth() + 10, textArea.getLocation().y + textArea.getSize().height + 10);
+        CreateGraph.setLocation(jsp.getX() + readFromFile.getWidth() + 10, jsp.getY() + jsp.getSize().height + 10);
+
+
+        runAlg.setSize(jsp.getWidth(), buttonSize.height);
+        runAlg.setLocation(jsp.getX(), this.getPreferredSize().height - runAlg.getHeight() - 10);
 
         step.setSize(buttonSize);
-        runAlg.setSize(buttonSize);
+        step.setLocation(runAlg.getX(), this.getPreferredSize().height - step.getHeight() - 10 - runAlg.getHeight() - 10);
 
-        step.setLocation(textArea.getX(), this.getPreferredSize().height - step.getHeight() - 10);
-        runAlg.setLocation(textArea.getX() + step.getWidth() + 10, this.getPreferredSize().height - step.getHeight() - 10);
+        toStartButton.setSize(buttonSize);
+        toStartButton.setLocation(step.getX() + step.getWidth() + 10, step.getY());
 
+
+
+
+
+
+
+
+
+
+        this.add(jsp);
         this.add(textFieldLabel);
         this.add(addEdge);
         this.add(step);
         this.add(runAlg);
+        this.add(toStartButton);
         this.add(readFromFile);
         this.add(CreateGraph);
-        this.add(textArea);
+        //this.add(textArea);
 
         CreateGraph.addActionListener(new ActionListener() {
             @Override
@@ -97,7 +122,7 @@ public class RigthControlPanel extends JPanel {
                         // читаем из файла построчно
                         String line;
                         while ((line = reader.readLine()) != null) {
-                            input+=line+' ';
+                            input+=line+"\n";
                         }
                         textArea.setText(input);
                     }
@@ -118,11 +143,6 @@ public class RigthControlPanel extends JPanel {
     private void foo() {
         System.out.println("foo called");
         this.sortedGraphField.setGraph(graph);
-        TopSort sort = new TopSort(graph);
-        sort.alg(graph);
-        if(sort.alg()==false){
-            System.out.println("CYCLE");
-        }
         this.sortedGraphField.repaint();
 
     }

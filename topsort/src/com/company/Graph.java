@@ -61,7 +61,7 @@ public class Graph {
         }
         graph.get(v1).way.remove((Integer)v2);
     }
-
+/*
     public void print(){
         for (Map.Entry<Integer, Vertex> k:
                 graph.entrySet()) {
@@ -72,7 +72,7 @@ public class Graph {
         }
         System.out.println("END");
     }
-
+*/
     public int V(){
         return VCount;
     }
