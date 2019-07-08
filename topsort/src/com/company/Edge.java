@@ -9,7 +9,7 @@ public class Edge {
             this.v1 = v1;
             this.v2 = v2;
         }
-        public Color color = EDGE_LINE_COLOR;
+        public int c = 0;
         public int v1;
         public int v2;
 }

@@ -18,7 +18,6 @@ public class SortedGraphField extends AbstractGraphField  {
         width = 900;
         height = 15;
         sort = new TopSort(graph);
-        sort.alg();
         LinkedList<Integer> sorted = sort.ans;
         setPreferredSize(new Dimension(900, 150));
         for (int i = 0; i < sort.ans.size(); i++) {
@@ -37,6 +36,7 @@ public class SortedGraphField extends AbstractGraphField  {
             sort_points.put(sorted.get(i), new ActiveVertex(this, sorted.get(i), i * 100 + VERTEX_D,
                     this.getPreferredSize().height / 2, graph));
         }
+        repaint();
     }
 
     @Override

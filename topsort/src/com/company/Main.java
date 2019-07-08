@@ -2,8 +2,6 @@ package com.company;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.company.PAR_S.WINDOW_SIZE;
-
 public class Main extends JFrame {
     public static void main(String[] args) {
         Graph g = new Graph();

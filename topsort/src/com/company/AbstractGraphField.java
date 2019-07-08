@@ -44,7 +44,15 @@ public abstract class AbstractGraphField extends JPanel  {
                     color = BASE_EDGE_COLOR;
                     drawEdge(g, edge, color, points);
                 }
-                g.setColor(/*inRes ? RESULT_VERTEX_COLOR :*/ BASE_VERTEX_COLOR);
+                if(graph.checkV(i.v).c == 0) {
+                    g.setColor(/*inRes ? RESULT_VERTEX_COLOR :*/ BASE_VERTEX_COLOR);
+                }
+                if(graph.checkV(i.v).c == 1) {
+                    g.setColor(new Color(150,150,150));
+                }
+                if (graph.checkV(i.v).c == 2){
+                    g.setColor(new Color(90,200,40));
+                }
                 drawVertex(g, i.v, points);
             }
         }

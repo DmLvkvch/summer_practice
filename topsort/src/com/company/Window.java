@@ -13,7 +13,7 @@ public class Window extends JPanel{
     public Window(Graph graph, TopSort sort) {
         this.sort = sort;
         this.graph = graph;
-        graphField = new SourceGraphField(graph);
+        graphField = new SourceGraphField(graph, sort);
         //new SourceGraphField(graph);
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new GridBagLayout());

@@ -12,21 +12,19 @@ import java.util.Random;
 import static com.company.PAR_S.*;
 
 public class SourceGraphField extends AbstractGraphField implements MouseListener, MouseMotionListener {
-
-    SourceGraphField(Graph graph) {
+    private TopSort topSort;
+    SourceGraphField(Graph graph, TopSort topSort) {
         super(graph);
+        this.topSort = topSort;
         setPreferredSize(new Dimension(900, 500));
         addMouseMotionListener(this);
-        addMouseListener(this);
-
+        addMouseListener(this);;
         for (int i = 0; i < graph.VertexList().size(); i++){
             Random r = new Random();
             points.put(graph.VertexList().get(i), new ActiveVertex(this, graph.VertexList().get(i), r.nextInt(600 - VERTEX_D) + VERTEX_R, r.nextInt(500 - VERTEX_D) + VERTEX_R, graph));
             add(points.get(graph.VertexList().get(i)));
         }
     }
-
-
 
     @Override
     public void paint(Graphics g) {
@@ -46,6 +44,7 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
                 for (Map.Entry<Integer, ActiveVertex> k:
                         points.entrySet()) {
                     if(!graph.VertexList().contains(k.getValue().v)) {
+                        this.remove(points.get(k.getKey()));
                         points.remove(k.getKey());
                         break;
                     }
@@ -59,7 +58,11 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
         Point v1 = new Point(points.get(edge.v1).point.x, points.get(edge.v1).point.y);
         Point v2 = new Point(points.get(edge.v2).point.x, points.get(edge.v2).point.y);
         ((Graphics2D)g).setStroke( EDGE_LINE_THIKNESS );  // Устанавливаем толщину ребра
-        g.setColor( EDGE_LINE_COLOR );
+            if((graph.checkV(edge.v1).c == 1 & graph.checkV(edge.v2).c == 1))
+                g.setColor(new Color(40,80,200));
+            else if(graph.checkV(edge.v1).c == 0 & graph.checkV(edge.v2).c == 0)
+                g.setColor(new Color(0,0,0));
+
         drawArrow(g, v1, v2);
     }
 
@@ -127,18 +130,18 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
     }
 
     boolean onEdge(int x, int y){
-    return true;
+        return  true;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        //int x = e.getX();
-        //int y = e.getY();
+        int x = e.getX();
+        int y = e.getY();
 
-            int x = max(graph) + 1;
-            graph.addV(x);
-            points.put(x, new ActiveVertex(this, x, e.getX(), e.getY(), graph));
-            add(points.get(x));
+            int k = max(graph) + 1;
+            graph.addV(k);
+            points.put(k, new ActiveVertex(this, k, e.getX(), e.getY(), graph));
+            add(points.get(k));
             repaint();
 
 
