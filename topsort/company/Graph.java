@@ -31,16 +31,10 @@ public class Graph {
         ECount++;
     }
 
-    public  void clear(){
-        graph.clear();
-        VCount = ECount = 0;
-        vertexes.clear();
-    }
-
     public void removeV(int v){
         if(graph.containsKey(v)) {
             graph.remove(v);
-            vertexes.remove((Integer)v);
+            vertexes.remove(new Integer(v));
             for (Map.Entry<Integer, Vertex> k :
                     graph.entrySet()) {
                 if (k.getValue().way.contains(v)) {
@@ -61,7 +55,7 @@ public class Graph {
         }
         graph.get(v1).way.remove((Integer)v2);
     }
-/*
+
     public void print(){
         for (Map.Entry<Integer, Vertex> k:
                 graph.entrySet()) {
@@ -72,7 +66,7 @@ public class Graph {
         }
         System.out.println("END");
     }
-*/
+
     public int V(){
         return VCount;
     }
