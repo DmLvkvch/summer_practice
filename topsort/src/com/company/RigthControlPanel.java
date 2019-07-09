@@ -17,6 +17,13 @@ public class RigthControlPanel extends JPanel {
     private JPanel parent;
     private SourceGraphField graphField;
     private SortedGraphField sortedGraphField;
+
+    public void setCommentLabel(JLabel commentLabel) {
+        this.commentLabel = commentLabel;
+    }
+
+    private JLabel commentLabel;
+
     public RigthControlPanel(Graph graph, JPanel parent, SourceGraphField graphField, SortedGraphField sortedGraphField ) {
         this.graphField = graphField;
         this.sortedGraphField = sortedGraphField;
@@ -138,17 +145,24 @@ public class RigthControlPanel extends JPanel {
                 doAllTheSteps();
                 foo();
                 graphField.repaint();
+
             }
         });
 
         step.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                /*
                 if(topSort.step() == false){
                     foo();
                 }
                 graphField.repaint();
                 //foo();
+                commentLabel.setText("dfsdf");
+
+                 */
+
+                commentLabel.setText(topSort.step());
             }
         });
     }

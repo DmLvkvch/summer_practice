@@ -8,10 +8,7 @@ public class LeftControlPanel extends JPanel {
     public LeftControlPanel() {
         this.setLayout(null);
         this.setPreferredSize(new Dimension(900, 150));
-        //this.setBackground(Color.BLUE);
-        JButton addEdgeButton = new JButton("add edge");
-        addEdgeButton.setSize(new Dimension(100, 25));
-        addEdgeButton.setLocation(this.getPreferredSize().width /*- addEdgeButton.getWidth() - 10*/, 10);
+
 
         commentsLabel.setSize(new Dimension(this.getPreferredSize().width, 90));
         commentsLabel.setLocation(0, 10/*addEdgeButton.getHeight() + 20*/);

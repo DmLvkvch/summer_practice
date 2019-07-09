@@ -91,10 +91,14 @@ public class TopSort {
         return answ;
     }
 
-    public void stepDFS() {
+    public String stepDFS() {
         DFSState state = states.pop();
-        System.out.println("шаг начат. состояние: " + state);
-        System.out.println("стек состояний: " + states);
+
+
+        StringBuilder builder = new StringBuilder();
+        //builder.append("шаг начат. состояние: " + state + "\n");
+        //builder.append("стек состояний: " + states + "\n");
+
 
         if (state.nextChild == 0) { // не вернулись в вершину из следующей, а зашли из предыдущей
             if (graph.checkV(state.vertex).c == GREY) {
@@ -107,16 +111,15 @@ public class TopSort {
                     graph.checkV(list.get(i)).c = RED;
                     i--;
                 }
-                return;
+                return builder.toString();
             }
             if (graph.checkV(state.vertex).c == BLACK) {
-                return;
+                return builder.toString();
             }
             graph.checkV(state.vertex).c = GREY;
-            leftControlPanel = new LeftControlPanel();
-            leftControlPanel.commentsLabel.setText("красим " + state.vertex + " в серый цвет");
             list.add(state.vertex);
             System.out.println("красим " + state.vertex + " в серый цвет");
+            builder.append("красим вершину " + state.vertex + " в серый цвет, потому что у нее есть непросмотренные дети" + "\n");
             //return;
         }
 
@@ -127,7 +130,7 @@ public class TopSort {
             if (graph.checkV(graph.checkV(state.vertex).way.get(state.nextChild)).c != BLACK) {
                 states.push(new DFSState(graph.checkV(state.vertex).way.get(state.nextChild), 0));
                 System.out.println("Pushing " + states.peek());
-                return;
+                return builder.toString();
             }
 
         }
@@ -136,13 +139,16 @@ public class TopSort {
         stack.push(state.vertex);
         graph.checkV(state.vertex).c = BLACK;
         leftControlPanel = new LeftControlPanel();
-        leftControlPanel.commentsLabel.setText("красим " + state.vertex + " в черный цвет");
-        System.out.println("красим " + state.vertex + " в черный цвет");
+        System.out.println("красим вершину " + state.vertex + " в черный цвет");
+        return graph.checkV(state.vertex).way.size() == 0 ?
+                "красим вершину " + state.vertex + " в черный цвет, потому что у нее нет детей" + "\n"
+                : "красим вершину " + state.vertex + " в черный цвет, потому что все дети уже черные" + "\n";
     }
 
 
 
-    boolean step() {
+    String step() {
+        String retVal;
         while (!states.empty() && graph.checkV(states.peek().vertex).c == BLACK) {
             states.pop();
         } // пропустили все черные вершин, не будем в них заходить
@@ -155,7 +161,8 @@ public class TopSort {
             }
         } // начинаем смотреть следующую компоненту сильной связности
         if (!states.empty()) {// делать шаг
-            stepDFS();
+            retVal = stepDFS();
+            return retVal;
         }
         else { // все вершины просмотрены, выводим ответ
             // разворачиваем стек, получаем ответ
@@ -165,9 +172,8 @@ public class TopSort {
                 stack.pop();
             }
             System.out.println("Answer: " + ans);
-            return false;
+            return "Answer: " + ans;
         }
-        return true;
     }
 
     void to_start(){
