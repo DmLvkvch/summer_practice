@@ -102,8 +102,6 @@ public class TopSort {
 
         if (state.nextChild == 0) { // не вернулись в вершину из следующей, а зашли из предыдущей
             if (graph.checkV(state.vertex).c == GREY) {
-                leftControlPanel = new LeftControlPanel();
-                leftControlPanel.commentsLabel.setText("CYCLE");
                 System.out.println("CYCLE: " + state.vertex);
                 int i = list.size()-1;
                 graph.checkV(state.vertex).c = RED;
@@ -111,7 +109,7 @@ public class TopSort {
                     graph.checkV(list.get(i)).c = RED;
                     i--;
                 }
-                return builder.toString();
+                return "Найден цикл";
             }
             if (graph.checkV(state.vertex).c == BLACK) {
                 return builder.toString();
@@ -130,6 +128,9 @@ public class TopSort {
             if (graph.checkV(graph.checkV(state.vertex).way.get(state.nextChild)).c != BLACK) {
                 states.push(new DFSState(graph.checkV(state.vertex).way.get(state.nextChild), 0));
                 System.out.println("Pushing " + states.peek());
+                if (builder.toString().equals("")) {
+                    return "Вершину " + state.vertex + " пока покрасить не можем, потому что у нее остались нечерные дети";
+                }
                 return builder.toString();
             }
 
@@ -172,7 +173,7 @@ public class TopSort {
                 stack.pop();
             }
             System.out.println("Answer: " + ans);
-            return "Answer: " + ans;
+            return "Алгоритм выполнен. ответ: " + ans;
         }
     }
 
