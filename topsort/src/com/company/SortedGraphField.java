@@ -20,9 +20,14 @@ public class SortedGraphField extends AbstractGraphField  {
         sort = new TopSort(graph);
         LinkedList<Integer> sorted = sort.ans;
         setPreferredSize(new Dimension(900, 150));
-        for (int i = 0; i < sort.ans.size(); i++) {
-            sort_points.put(sorted.get(i), new ActiveVertex(this, i, i * 100,
-                    this.getPreferredSize().height / 2, graph));
+        if (sort.ans != null) {
+            for (int i = 0; i < sort.ans.size(); i++) {
+                ActiveVertex activeVertex = new ActiveVertex(this, i, i * 100,
+                        this.getPreferredSize().height / 2, graph);
+                activeVertex.setClickable(false);
+                activeVertex.setMoveable(false);
+                sort_points.put(sorted.get(i), activeVertex);
+            }
         }
     }
 
@@ -31,10 +36,15 @@ public class SortedGraphField extends AbstractGraphField  {
         this.graph = graph;
         sort.alg(graph);
         LinkedList<Integer> sorted = sort.ans;
+        if (sorted == null)
+            return;
         sort_points.clear();
         for (int i = 0; i < sorted.size(); i++) {
-            sort_points.put(sorted.get(i), new ActiveVertex(this, sorted.get(i), i * 100 + VERTEX_D,
-                    this.getPreferredSize().height / 2, graph));
+            ActiveVertex activeVertex = new ActiveVertex(this, sorted.get(i), i * 100 + VERTEX_D,
+                    this.getPreferredSize().height / 2, graph);
+            sort_points.put(sorted.get(i), activeVertex);
+            activeVertex.setClickable(false);
+            activeVertex.setMoveable(false);
         }
         repaint();
     }

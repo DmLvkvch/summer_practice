@@ -132,10 +132,10 @@ public class RigthControlPanel extends JPanel {
         toStartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for(int i = 0;i<graph.V();i++)
-                    graph.checkV(graph.VertexList().get(i)).c = 0;
-                graphField.repaint();
                 topSort.to_start();
+                graphField.repaint();
+                commentLabel.setText("");
+
             }
         });
 
@@ -152,26 +152,18 @@ public class RigthControlPanel extends JPanel {
         step.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /*
-                if(topSort.step() == false){
-                    foo();
-                }
-                graphField.repaint();
-                //foo();
-                commentLabel.setText("dfsdf");
-
-                 */
-
                 commentLabel.setText(topSort.step());
+                if (topSort.ans != null) {
+                    sortedGraphField.setGraph(graph);
+                    sortedGraphField.repaint();
+                }
             }
         });
     }
 
     private void foo() {
-        System.out.println("foo called");
         this.sortedGraphField.setGraph(graph);
         this.sortedGraphField.repaint();
-
     }
 
     private void doAllTheSteps() {

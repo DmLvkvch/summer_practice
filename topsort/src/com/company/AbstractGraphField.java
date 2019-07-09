@@ -44,7 +44,7 @@ public abstract class AbstractGraphField extends JPanel  {
     protected void drawGraph(Graphics g, HashMap<Integer, ActiveVertex> points) {
         Edge edge;
         refreshColors();
-        for (ActiveVertex i: points.values())
+        for (ActiveVertex i: points.values()) {
             for (int j = 0; j < max(graph)+1; j++) {
                 if ( ( edge = graph.checkE(i.vertex, j)) != null ) {
                     Color color;
@@ -53,6 +53,8 @@ public abstract class AbstractGraphField extends JPanel  {
                 }
             }
         }
+
+    }
 
     protected abstract void drawEdge(Graphics g, Edge edge, Color color,HashMap<Integer, ActiveVertex> points);
     abstract void drawArrow(Graphics g, Point source, Point drain);

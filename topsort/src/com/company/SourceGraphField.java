@@ -140,18 +140,18 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
         int source = 0, stock = 0;
         if (e.getButton() == MouseEvent.BUTTON3){
             Point p = e.getPoint();
-            loop:
             for(int j = 0; j < points.size(); j++){
-                for (int i = 0; i < /*Graph.graph.get(points.get(j).v).way.size()*/graph.checkV(points.get(j).vertex).way.size(); i++) {
-                    double ans1 = (p.x - points.get(j).getCenter().x) * (points.get(graph.checkV(points.get(j).vertex).way.get(i)).getCenter().y - points.get(j).getCenter().y);
-                    double ans2 = (p.y - points.get(j).getCenter().y) * (points.get(graph.checkV(points.get(j).vertex).way.get(i)).getCenter().x - points.get(j).getCenter().x);
-
-                    System.out.println(points.get(j).getCenter().x);
-                    System.out.println(points.get(j).getCenter().y);
-                    if (Math.abs(ans1 - ans2) < 1000) {
-                        source = points.get(j).vertex;
-                        stock = graph.checkV(points.get(j).vertex).way.get(i);
-                        break loop;
+                for (int i = 0; i < /*Graph.graph.get(points.get(j).v).way.size()*/graph.checkV(points.get(graph.VertexList().get(j)).vertex).way.size(); i++) {
+                    double ans1 = (p.x - points.get(graph.VertexList().get(j)).getCenter().x) *
+                            (points.get(graph.checkV(points.get(graph.VertexList().get(j)).vertex).way.get(i)).getCenter().y - points.get(graph.VertexList().get(j)).getCenter().y);
+                    double ans2 = (p.y - points.get(graph.VertexList().get(j)).getCenter().y) *
+                            (points.get(graph.checkV(points.get(graph.VertexList().get(j)).vertex).way.get(i)).getCenter().x - points.get(graph.VertexList().get(j)).getCenter().x);
+                    System.out.println(points.get(graph.VertexList().get(j)).getCenter().x);
+                    System.out.println(points.get(graph.VertexList().get(j)).getCenter().y);
+                    if (Math.abs(ans1 - ans2) < 900) {
+                        source = points.get(graph.VertexList().get(j)).vertex;
+                        stock = graph.checkV(points.get(graph.VertexList().get(j)).vertex).way.get(i);
+                        break ;
                     }
                 }
             }

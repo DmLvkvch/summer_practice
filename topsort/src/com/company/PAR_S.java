@@ -31,6 +31,6 @@ public class PAR_S {
     public final static int VERTEX_D = VERTEX_R*2;
 
     // Размеры линий
-    public final static BasicStroke EDGE_LINE_THIKNESS = new BasicStroke(3);
+    public final static BasicStroke EDGE_LINE_THIKNESS = new BasicStroke(2);
     public final static BasicStroke EDGE_CIRKLE_LINE_THKNESS = new BasicStroke(2);
 }
