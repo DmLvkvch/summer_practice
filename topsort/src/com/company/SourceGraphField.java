@@ -13,9 +13,9 @@ import static com.company.PAR_S.*;
 
 public class SourceGraphField extends AbstractGraphField implements MouseListener, MouseMotionListener {
     private TopSort topSort;
-    SourceGraphField(Graph graph, TopSort topSort) {
+    SourceGraphField(Graph graph) {
         super(graph);
-        this.topSort = topSort;
+        //this.topSort = topSort;
         setPreferredSize(new Dimension(900, 500));
         addMouseMotionListener(this);
         addMouseListener(this);;
@@ -58,10 +58,10 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
         Point v1 = new Point(points.get(edge.v1).point.x, points.get(edge.v1).point.y);
         Point v2 = new Point(points.get(edge.v2).point.x, points.get(edge.v2).point.y);
         ((Graphics2D)g).setStroke( EDGE_LINE_THIKNESS );  // Устанавливаем толщину ребра
-            if((graph.checkV(edge.v1).c == 1 & graph.checkV(edge.v2).c == 1))
-                g.setColor(new Color(40,80,200));
-            else if(graph.checkV(edge.v1).c == 0 & graph.checkV(edge.v2).c == 0)
+        if(graph.checkV(edge.v1).c == 0 & graph.checkV(edge.v2).c == 0)
                 g.setColor(new Color(0,0,0));
+        else if((graph.checkV(edge.v1).c == 1 & graph.checkV(edge.v2).c == 1))
+            g.setColor(new Color(40,80,200));
 
         drawArrow(g, v1, v2);
     }
@@ -135,15 +135,34 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
+        int source = 0, stock = 0;
+        if (e.getButton() == MouseEvent.BUTTON3){
+            Point p = e.getPoint();
+            loop:
+            for(int j = 0; j < points.size(); j++){
+                for (int i = 0; i < /*Graph.graph.get(points.get(j).v).way.size()*/graph.checkV(points.get(j).v).way.size(); i++) {
+                    double ans1 = (p.x - points.get(j).point.x) * (points.get(graph.checkV(points.get(j).v).way.get(i)).point.y - points.get(j).point.y);
+                    double ans2 = (p.y - points.get(j).point.y) * (points.get(graph.checkV(points.get(j).v).way.get(i)).point.x - points.get(j).point.x);
 
+                    System.out.println(points.get(j).point.x);
+                    System.out.println(points.get(j).point.y);
+                    if (Math.abs(ans1 - ans2) < 1000) {
+                        source = points.get(j).v;
+                        stock = graph.checkV(points.get(j).v).way.get(i);
+                        break loop;
+                    }
+                }
+            }
+            if(graph.checkE(source, stock)!=null)
+                graph.removeE(source, stock);
+            repaint();
+        }else {
             int k = max(graph) + 1;
             graph.addV(k);
             points.put(k, new ActiveVertex(this, k, e.getX(), e.getY(), graph));
             add(points.get(k));
             repaint();
-
+        }
 
     }
 

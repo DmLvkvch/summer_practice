@@ -17,7 +17,6 @@ public class RigthControlPanel extends JPanel {
     private JPanel parent;
     private SourceGraphField graphField;
     private SortedGraphField sortedGraphField;
-    TopSort topSort ;
     public RigthControlPanel(Graph graph, JPanel parent, SourceGraphField graphField, SortedGraphField sortedGraphField ) {
         this.graphField = graphField;
         this.sortedGraphField = sortedGraphField;
@@ -123,11 +122,22 @@ public class RigthControlPanel extends JPanel {
             }
         });
 
+        toStartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for(int i = 0;i<graph.V();i++)
+                    graph.checkV(graph.VertexList().get(i)).c = 0;
+                graphField.repaint();
+                topSort.to_start();
+            }
+        });
+
         runAlg.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 doAllTheSteps();
                 foo();
+                graphField.repaint();
             }
         });
 
@@ -151,8 +161,6 @@ public class RigthControlPanel extends JPanel {
     }
 
     private void doAllTheSteps() {
-
-
         //this.sortedGraphField.setGraph(graph);
         //this.sortedGraphField.repaint();
 

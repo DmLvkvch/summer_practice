@@ -53,6 +53,9 @@ public abstract class AbstractGraphField extends JPanel  {
                 if (graph.checkV(i.v).c == 2){
                     g.setColor(new Color(90,200,40));
                 }
+                if (graph.checkV(i.v).c == 3){
+                    g.setColor(new Color(190,0,40));
+                }
                 drawVertex(g, i.v, points);
             }
         }
