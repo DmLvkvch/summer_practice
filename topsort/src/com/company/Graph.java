@@ -9,7 +9,7 @@ public class Graph {
     private int ECount = 0;
     private HashMap<Integer, Vertex> graph = new HashMap<>();//список смежности
     private LinkedList<Integer> vertexes = new LinkedList<>();
-
+    private LinkedList<Edge> edges = new LinkedList<>();
     public Graph(){}
 
     public void addV(int v){
@@ -21,7 +21,9 @@ public class Graph {
         else
             throw new RuntimeException("Vertex "+ v+" already exists");
     }
-
+    public LinkedList<Edge> getEdges(){
+        return edges;
+    }
     public void addE(int v1, int v2){
         if(!graph.containsKey(v1))
             addV(v1);

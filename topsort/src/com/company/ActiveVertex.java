@@ -73,7 +73,9 @@ public class ActiveVertex extends JPanel implements MouseListener, MouseMotionLi
     public void mouseClicked(MouseEvent e) {
         if(e.getButton()==MouseEvent.BUTTON1) {
             if(cur_ver.size()!=0){
-                graph.checkV(cur_ver.pop().v).c = color_stack.pop();
+                graph.checkV(cur_ver.peek().v).c = color_stack.peek();
+                cur_ver.clear();
+                color_stack.clear();
             }
             cur_ver.push(this);
             color_stack.push(graph.checkV(this.v).c);
@@ -85,6 +87,8 @@ public class ActiveVertex extends JPanel implements MouseListener, MouseMotionLi
                 stack.pop();
                 if (k == stack.peek().v) {
                     graph.removeV(stack.peek().v);
+                    cur_ver.clear();
+                    color_stack.clear();
                     stack.pop();
                     parent.repaint();
                 } else {
@@ -92,6 +96,8 @@ public class ActiveVertex extends JPanel implements MouseListener, MouseMotionLi
                     stack.pop();
                     if(cur_ver.size()!=0){
                         graph.checkV(cur_ver.pop().v).c = color_stack.pop();
+                        cur_ver.clear();
+                        color_stack.clear();
                     }
                     parent.repaint();
                 }

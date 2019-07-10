@@ -10,9 +10,9 @@ import static com.company.PAR_S.*;
 
 public class SourceGraphField extends AbstractGraphField implements MouseListener, MouseMotionListener {
     private TopSort topSort;
-    SourceGraphField(Graph graph) {
+    SourceGraphField(Graph graph, TopSort topSort) {
         super(graph);
-        //this.topSort = topSort;
+        this.topSort = topSort;
         setPreferredSize(new Dimension(900, 500));
         addMouseMotionListener(this);
         addMouseListener(this);
@@ -49,25 +49,31 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
             }
         drawGraph(g, points);
     }
-
+    int getIndex(LinkedList<Edge> list, Edge edge){
+        int i = 0;
+        while(!list.get(i).equals(edge)){
+            i++;
+        }
+        return i;
+    }
     @Override
     protected void drawEdge(Graphics g, Edge edge, Color color, HashMap<Integer, ActiveVertex> points){
         Point v1 = new Point(points.get(edge.v1).point.x, points.get(edge.v1).point.y);
         Point v2 = new Point(points.get(edge.v2).point.x, points.get(edge.v2).point.y);
         ((Graphics2D)g).setStroke( EDGE_LINE_THIKNESS );  // Устанавливаем толщину ребра
-
+        if(graph.checkV(edge.v1)!=null && graph.checkV(edge.v2)!=null){
+            if(graph.getEdges().size()!=0)
+                if(graph.getEdges().contains(edge)){
+                    if(graph.getEdges().get(getIndex(graph.getEdges(), edge)).c == 1)
+                        g.setColor(new Color(40, 80, 200));
+                    if(graph.getEdges().get(getIndex(graph.getEdges(), edge)).c == 2)
+                        g.setColor(new Color(100, 100, 0));
+                    if(graph.getEdges().get(getIndex(graph.getEdges(), edge)).c == 3)
+                        g.setColor(new Color(200, 200, 100));
+                }
+        }
         if (graph.checkV(edge.v1).c == 3 & graph.checkV(edge.v2).c == 3)
-                g.setColor(new Color(190, 0, 40));
-        if(graph.checkV(edge.v1).c == 1 & graph.checkV(edge.v2).c == 1)
-                g.setColor(new Color(40, 80, 200));
-        /*
-        if((graph.checkV(edge.v1).c == 1 & graph.checkV(edge.v2).c == 2 ) ||
-                (graph.checkV(edge.v2).c == 1 & graph.checkV(edge.v1).c == 2) ||
-                (graph.checkV(edge.v1).c == 2 & graph.checkV(edge.v2).c == 2 ))
-        g.setColor(new Color(40, 80, 100));
-        */
-        if(graph.checkV(edge.v1).c == 0 && graph.checkV(edge.v2).c == 0)
-            g.setColor(new Color(0,0,0));
+            g.setColor(new Color(190, 0, 40));
         drawArrow(g, v1, v2);
     }
 

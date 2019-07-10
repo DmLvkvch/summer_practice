@@ -94,12 +94,14 @@ public class RigthControlPanel extends JPanel {
                 String input = textArea.getText();
                 graph.clear();
                 graphField.repaint();
-                String[] parsed = input.split("[^0-9]");
-                for(int i = 0;i<parsed.length;i++){
-                    graph.addE(Integer.parseInt(parsed[i]), Integer.parseInt(parsed[i+1]));
-                    i++;
+                if (input.length() != 0) {
+                    String[] parsed = input.split("[^0-9]");
+                    for (int i = 0; i < parsed.length; i++) {
+                        graph.addE(Integer.parseInt(parsed[i]), Integer.parseInt(parsed[i + 1]));
+                        i++;
+                    }
+                    graphField.repaint();
                 }
-                graphField.repaint();
             }
         });
 
@@ -131,7 +133,6 @@ public class RigthControlPanel extends JPanel {
                 topSort.to_start();
                 graphField.repaint();
                 sortedGraphField.setGraph(new Graph());
-
             }
         });
 

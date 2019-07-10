@@ -15,7 +15,9 @@ public class TopSort {
     private Stack<DFSState> states = new Stack<>();
     private LinkedList<Integer> list = new LinkedList<>();
     private LinkedList<Integer> cycle = new LinkedList<>();
+    public LinkedList<Edge> edges = new LinkedList<>();
     private int exit_num = 0;
+    private int timeOfEntry = 1;
     public TopSort(Graph g) {
         graph = g;
         init();
@@ -117,7 +119,15 @@ public class TopSort {
 
             graph.checkV(state.vertex).c = GREY;
             list.add(state.vertex);
-
+            if(list.size()>1){
+                graph.getEdges().add(new Edge(list.get(list.size()-2), list.get(list.size()-1), 3));
+                if(graph.getEdges().size()>1){
+                    for(int i = 0;i<graph.getEdges().size()-1;i++) {
+                        if(graph.getEdges().get(i).c!=2)
+                            graph.getEdges().get(i).c = 1;
+                    }
+                }
+            }
             if (graph.checkV(state.vertex).way.size() == 0) { // нет потомков
                 states.push(new DFSState(state.vertex, 1)); // на следующем шаге покрасим в черный
                 System.out.println("Pushing " + states.peek());
@@ -130,8 +140,6 @@ public class TopSort {
                 System.out.println("красим " + state.vertex + " в серый цвет");
                 return "красим " + state.vertex + " в серый цвет";
             }
-
-
             //return builder.toString();
             //return;
         }
@@ -153,10 +161,16 @@ public class TopSort {
         graph.checkV(state.vertex).c = BLACK;
         list.remove((Integer)state.vertex);
         graph.checkV(state.vertex).exit_num = this.exit_num++;
+        for(int i = 0;i<graph.getEdges().size();i++){
+            if(graph.getEdges().get(i).v2 == state.vertex){
+                graph.getEdges().get(i).c = 2;
+                break;
+            }
+        }
         if (graph.checkV(state.vertex).way.size() == 0) {
-            return "красим вершину " + state.vertex + " в зеленый цвет, потому что у нее нет потомков. В отсортированном графе она будет "+(exit_num-1)+" справа.";
+            return "красим вершину " + state.vertex + " в зеленый цвет, потому что у нее нет потомков. В отсортированном графе она будет "+(exit_num)+" справа.";
         } else {
-            return "красим вершину " + state.vertex + " в зеленый цвет, потому что все ее потомки посещены. В отсортированном графе она будет "+(exit_num-1)+" справа.";
+            return "красим вершину " + state.vertex + " в зеленый цвет, потому что все ее потомки посещены. В отсортированном графе она будет "+(exit_num)+" справа.";
         }
     }
 
@@ -206,6 +220,7 @@ public class TopSort {
         ans = null;
         stack.clear();
         list.clear();
+        graph.getEdges().clear();
         this.exit_num = 0;
         for (Integer vertex : graph.VertexList()) {
             graph.checkV(vertex).c = WHITE;
