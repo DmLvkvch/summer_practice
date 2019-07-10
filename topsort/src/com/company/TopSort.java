@@ -14,9 +14,10 @@ public class TopSort {
     public LinkedList<Integer> ans = null;
     private Stack<DFSState> states = new Stack<>();
     private LinkedList<Integer> list = new LinkedList<>();
-    private List<Integer> cycle = new ArrayList<>();
-
-
+    private LinkedList<Integer> cycle = new LinkedList<>();
+    public LinkedList<Edge> edges = new LinkedList<>();
+    private int exit_num = 0;
+    private int timeOfEntry = 1;
     public TopSort(Graph g) {
         graph = g;
         init();
@@ -27,6 +28,7 @@ public class TopSort {
     }
 
     boolean alg() {
+        this.exit_num = 0;
         boolean Cycle = false;
         for (int i = 0; i < graph.V(); i++) {
             Cycle = DFS(graph.VertexList().get(i));
@@ -67,6 +69,7 @@ public class TopSort {
         }
         stack.push(v);
         graph.checkV(v).c = BLACK;
+        graph.checkV(v).exit_num = this.exit_num++;
         System.out.println("красим " + v + " в черный цвет");
         return false;
     }
@@ -79,6 +82,13 @@ public class TopSort {
             }
         }
         return answ;
+    }
+
+    private LinkedList<Integer> reverse(LinkedList<Integer> list){
+        LinkedList<Integer> new_list = new LinkedList<>();
+        for(int i = 0;i<list.size();i++)
+            new_list.add(list.get(list.size()-i-1));
+        return new_list;
     }
 
     private String stepDFS() {
@@ -99,29 +109,37 @@ public class TopSort {
                 int i = list.size() - 1;
                 while (list.get(i) != state.vertex) {
                     graph.checkV(list.get(i)).c = RED;
-                    //cycle.add(list.get(i));
+                    cycle.add(list.get(i));
                     i--;
                 }
-                return "Цикл";
+                cycle = reverse(cycle);
+                return "Цикл, так как перешли в вершину "+graph.checkV(state.vertex).v+", которая окрашена в серый цвет.\nЦикл: "+
+                        cycle;
             }
 
             graph.checkV(state.vertex).c = GREY;
             list.add(state.vertex);
-
+            if(list.size()>1){
+                graph.getEdges().add(new Edge(list.get(list.size()-2), list.get(list.size()-1), 3));
+                if(graph.getEdges().size()>1){
+                    for(int i = 0;i<graph.getEdges().size()-1;i++) {
+                        if(graph.getEdges().get(i).c!=2)
+                            graph.getEdges().get(i).c = 1;
+                    }
+                }
+            }
             if (graph.checkV(state.vertex).way.size() == 0) { // нет потомков
                 states.push(new DFSState(state.vertex, 1)); // на следующем шаге покрасим в черный
                 System.out.println("Pushing " + states.peek());
-                return ("красим " + state.vertex + " в серый цвет");
+                return "красим " + state.vertex + " в серый цвет";
             } else {
                 states.push(new DFSState(state.vertex, state.nextChild + 1));
                 System.out.println("Pushing " + states.peek());
                 states.push(new DFSState(graph.checkV(state.vertex).way.get(state.nextChild), 0));
                 System.out.println("Pushing " + states.peek());
                 System.out.println("красим " + state.vertex + " в серый цвет");
-                return ("красим " + state.vertex + " в серый цвет");
+                return "красим " + state.vertex + " в серый цвет";
             }
-
-
             //return builder.toString();
             //return;
         }
@@ -134,7 +152,7 @@ public class TopSort {
 
             states.push(new DFSState(graph.checkV(state.vertex).way.get(state.nextChild), 0));
             System.out.println("Pushing " + states.peek());
-            return "На этом шаге красить вершину " + state.vertex + " в зеленый нельзя, потому что у нее есть нечерные потомки";
+            return "На этом шаге красить вершину " + state.vertex + " в зеленый нельзя, потому что у нее есть непросмотренные из нее потомки";
 
         }
 
@@ -142,10 +160,17 @@ public class TopSort {
         stack.push(state.vertex);
         graph.checkV(state.vertex).c = BLACK;
         list.remove((Integer)state.vertex);
+        graph.checkV(state.vertex).exit_num = this.exit_num++;
+        for(int i = 0;i<graph.getEdges().size();i++){
+            if(graph.getEdges().get(i).v2 == state.vertex){
+                graph.getEdges().get(i).c = 2;
+                break;
+            }
+        }
         if (graph.checkV(state.vertex).way.size() == 0) {
-            return "красим вершину " + state.vertex + " в зеленый цвет, потому что у нее нет потомков";
+            return "красим вершину " + state.vertex + " в зеленый цвет, потому что у нее нет потомков. В отсортированном графе она будет "+(exit_num)+" справа.";
         } else {
-            return "красим вершину " + state.vertex + " в зеленый цвет, потому что все ее потомки посещены";
+            return "красим вершину " + state.vertex + " в зеленый цвет, потому что все ее потомки посещены. В отсортированном графе она будет "+(exit_num)+" справа.";
         }
     }
 
@@ -195,8 +220,11 @@ public class TopSort {
         ans = null;
         stack.clear();
         list.clear();
+        graph.getEdges().clear();
+        this.exit_num = 0;
         for (Integer vertex : graph.VertexList()) {
             graph.checkV(vertex).c = WHITE;
+            graph.checkV(vertex).exit_num = -1;
         }
     }
 

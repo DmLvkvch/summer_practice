@@ -11,5 +11,4 @@ public class PAR_S {
     public final static int TEXT_SIZE = 14;
     public final static int VERTEX_D = VERTEX_R*2;
     public final static BasicStroke EDGE_LINE_THIKNESS = new BasicStroke(3);
-    public final static Color EDGE_LINE_COLOR = Color.BLACK;
 }

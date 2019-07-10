@@ -14,7 +14,7 @@ public class Window extends JPanel{
     public Window(Graph graph, TopSort sort) {
         this.sort = sort;
         this.graph = graph;
-        this.graphField = new SourceGraphField(graph);
+        this.graphField = new SourceGraphField(graph, sort);
         //new SourceGraphField(graph);
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new GridBagLayout());
@@ -33,11 +33,12 @@ public class Window extends JPanel{
         constraints.gridx     = 0;
         constraints.gridy     = 1;
         sortedGraphField = new SortedGraphField(graph);
-        contentPanel.add(sortedGraphField, constraints);
+        //contentPanel.add(sortedGraphField, constraints);
 
         JScrollPane jScrollPane = new JScrollPane(sortedGraphField);
-        jScrollPane.setPreferredSize(new Dimension(900,150));
+        jScrollPane.setPreferredSize(new Dimension(900,165));
         jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         contentPanel.add(jScrollPane, constraints);
 
 
@@ -49,7 +50,13 @@ public class Window extends JPanel{
 
 
 
+
+
+        //commentsLabel.setPreferredSize(new Dimension(900, 150));
+
+
         RigthControlPanel cp  = new RigthControlPanel(this.graph, contentPanel, graphField, sortedGraphField);
+
         cp.setCommentPane(leftPanel.commentArea);
         constraints.gridx = 1;      // первая ячейка таблицы по горизонтали
         constraints.gridy = 0;

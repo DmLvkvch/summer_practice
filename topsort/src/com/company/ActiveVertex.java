@@ -15,9 +15,9 @@ public class ActiveVertex extends JPanel implements MouseListener, MouseMotionLi
     Point point;
     final int v;
     static Stack<ActiveVertex> stack = new Stack<>();
-
+    static Stack<Integer> color_stack = new Stack<>();
     private Point mouse = new Point();
-
+    static Stack<ActiveVertex> cur_ver = new Stack<>();
     private boolean flagCanMove = false;
 
 
@@ -60,7 +60,7 @@ public class ActiveVertex extends JPanel implements MouseListener, MouseMotionLi
             else point.x = x;
 
             int y = point.y + dy;
-            if (y- VERTEX_R < 0) point.y = VERTEX_R;
+            if (y - VERTEX_R < 0) point.y = VERTEX_R;
             else if (y+ VERTEX_R>500) point.y = 500- VERTEX_R;
             else point.y = y;
 
@@ -72,17 +72,33 @@ public class ActiveVertex extends JPanel implements MouseListener, MouseMotionLi
     @Override
     public void mouseClicked(MouseEvent e) {
         if(e.getButton()==MouseEvent.BUTTON1) {
+            if(cur_ver.size()!=0){
+                graph.checkV(cur_ver.peek().v).c = color_stack.peek();
+                cur_ver.clear();
+                color_stack.clear();
+            }
+            cur_ver.push(this);
+            color_stack.push(graph.checkV(this.v).c);
+            graph.checkV(this.v).c = 4;
+            parent.repaint();
             stack.push(this);
             if (stack.size() == 2) {
                 int k = stack.peek().v;
                 stack.pop();
                 if (k == stack.peek().v) {
                     graph.removeV(stack.peek().v);
+                    cur_ver.clear();
+                    color_stack.clear();
                     stack.pop();
                     parent.repaint();
                 } else {
                     graph.addE(stack.peek().v, k);
                     stack.pop();
+                    if(cur_ver.size()!=0){
+                        graph.checkV(cur_ver.pop().v).c = color_stack.pop();
+                        cur_ver.clear();
+                        color_stack.clear();
+                    }
                     parent.repaint();
                 }
             }

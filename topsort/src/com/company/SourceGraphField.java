@@ -4,21 +4,18 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static com.company.PAR_S.*;
 
 public class SourceGraphField extends AbstractGraphField implements MouseListener, MouseMotionListener {
     private TopSort topSort;
-    SourceGraphField(Graph graph) {
+    SourceGraphField(Graph graph, TopSort topSort) {
         super(graph);
-        //this.topSort = topSort;
-        setPreferredSize(new Dimension(900, 500));
+        this.topSort = topSort;
+        setPreferredSize(new Dimension(900, 485));
         addMouseMotionListener(this);
-        addMouseListener(this);;
+        addMouseListener(this);
         for (int i = 0; i < graph.VertexList().size(); i++){
             Random r = new Random();
             points.put(graph.VertexList().get(i), new ActiveVertex(this, graph.VertexList().get(i), r.nextInt(600 - VERTEX_D) + VERTEX_R, r.nextInt(500 - VERTEX_D) + VERTEX_R, graph));
@@ -52,19 +49,31 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
             }
         drawGraph(g, points);
     }
-
+    int getIndex(LinkedList<Edge> list, Edge edge){
+        int i = 0;
+        while(!list.get(i).equals(edge)){
+            i++;
+        }
+        return i;
+    }
     @Override
     protected void drawEdge(Graphics g, Edge edge, Color color, HashMap<Integer, ActiveVertex> points){
         Point v1 = new Point(points.get(edge.v1).point.x, points.get(edge.v1).point.y);
         Point v2 = new Point(points.get(edge.v2).point.x, points.get(edge.v2).point.y);
         ((Graphics2D)g).setStroke( EDGE_LINE_THIKNESS );  // Устанавливаем толщину ребра
-
-        if(graph.checkV(edge.v1).c == 0 & graph.checkV(edge.v2).c == 0)
-                g.setColor(new Color(0,0,0));
-            if (graph.checkV(edge.v1).c == 3 & graph.checkV(edge.v2).c == 3)
-                g.setColor(new Color(190, 0, 40));
-            if(graph.checkV(edge.v1).c == 1 & graph.checkV(edge.v2).c == 1)
-                g.setColor(new Color(40, 80, 200));
+        if(graph.checkV(edge.v1)!=null && graph.checkV(edge.v2)!=null){
+            if(graph.getEdges().size()!=0)
+                if(graph.getEdges().contains(edge)){
+                    if(graph.getEdges().get(getIndex(graph.getEdges(), edge)).c == 1)
+                        g.setColor(new Color(40, 80, 200));
+                    if(graph.getEdges().get(getIndex(graph.getEdges(), edge)).c == 2)
+                        g.setColor(new Color(100, 100, 0));
+                    if(graph.getEdges().get(getIndex(graph.getEdges(), edge)).c == 3)
+                        g.setColor(new Color(200, 200, 100));
+                }
+        }
+        if (graph.checkV(edge.v1).c == 3 & graph.checkV(edge.v2).c == 3)
+            g.setColor(new Color(190, 0, 40));
         drawArrow(g, v1, v2);
     }
 
@@ -165,7 +174,6 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
             add(points.get(k));
             repaint();
         }
-
     }
 
     @Override

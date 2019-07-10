@@ -8,7 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.Stack;
 
 public class RigthControlPanel extends JPanel {
     //AbstractGraphField graphField;
@@ -17,12 +17,12 @@ public class RigthControlPanel extends JPanel {
     private JPanel parent;
     private SourceGraphField graphField;
     private SortedGraphField sortedGraphField;
-
+    public Stack<Graph> stack = new Stack<>();
+    private JTextPane commentPane;
     public void setCommentPane(JTextPane commentPane) {
         this.commentPane = commentPane;
     }
 
-    private JTextPane commentPane;
     public RigthControlPanel(Graph graph, JPanel parent, SourceGraphField graphField, SortedGraphField sortedGraphField ) {
         this.graphField = graphField;
         this.sortedGraphField = sortedGraphField;
@@ -43,8 +43,7 @@ public class RigthControlPanel extends JPanel {
         JButton readFromFile = new JButton("read form file");
         JButton CreateGraph = new JButton("create graph");
         JButton toStartButton = new JButton("Go back to start");
-        JButton stepBack = new JButton("Undo");
-
+        JButton stepBack = new JButton("Cancel last action on graph field");
 
 
         textFieldLabel.setSize(550, 25);
@@ -78,7 +77,6 @@ public class RigthControlPanel extends JPanel {
         stepBack.setSize(buttonSize);
         stepBack.setLocation(runAlg.getX(), this.getPreferredSize().height - step.getHeight() - 10 - stepBack.getHeight() - 10 - runAlg.getHeight() - 10);
 
-
         this.add(jsp);
         this.add(textFieldLabel);
         this.add(addEdge);
@@ -96,12 +94,14 @@ public class RigthControlPanel extends JPanel {
                 String input = textArea.getText();
                 graph.clear();
                 graphField.repaint();
-                String[] parsed = input.split("[^0-9]");
-                for(int i = 0;i<parsed.length;i++){
-                    graph.addE(Integer.parseInt(parsed[i]), Integer.parseInt(parsed[i+1]));
-                    i++;
+                if (input.length() != 0) {
+                    String[] parsed = input.split("[^0-9]");
+                    for (int i = 0; i < parsed.length; i++) {
+                        graph.addE(Integer.parseInt(parsed[i]), Integer.parseInt(parsed[i + 1]));
+                        i++;
+                    }
+                    graphField.repaint();
                 }
-                graphField.repaint();
             }
         });
 
@@ -133,9 +133,7 @@ public class RigthControlPanel extends JPanel {
                 topSort.to_start();
                 graphField.repaint();
                 sortedGraphField.setGraph(new Graph());
-
-                //.setText("");
-
+                commentPane.setText("");
             }
         });
 
@@ -152,7 +150,7 @@ public class RigthControlPanel extends JPanel {
         step.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               // commentLabel.setText(topSort.step());
+                // commentLabel.setText(topSort.step());
                 String comment = topSort.step() + "\r\n";
                 commentPane.setText(commentPane.getText() + comment);
                 if (topSort.ans != null) {
@@ -160,6 +158,12 @@ public class RigthControlPanel extends JPanel {
                     sortedGraphField.repaint();
                 }
                 graphField.repaint();
+            }
+        });
+        stepBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         });
     }
