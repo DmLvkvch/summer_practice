@@ -209,6 +209,7 @@ public class TopSort {
         this.exit_num = 0;
         for (Integer vertex : graph.VertexList()) {
             graph.checkV(vertex).c = WHITE;
+            graph.checkV(vertex).exit_num = -1;
         }
     }
 

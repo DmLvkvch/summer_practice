@@ -168,7 +168,6 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
             add(points.get(k));
             repaint();
         }
-
     }
 
     @Override
