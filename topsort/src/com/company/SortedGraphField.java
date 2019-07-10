@@ -20,9 +20,11 @@ public class SortedGraphField extends AbstractGraphField  {
         sort = new TopSort(graph);
         LinkedList<Integer> sorted = sort.ans;
         setPreferredSize(new Dimension(900, 150));
-        for (int i = 0; i < sort.ans.size(); i++) {
-            sort_points.put(sorted.get(i), new ActiveVertex(this, i, i * 100,
-                    this.getPreferredSize().height / 2, graph));
+        if (sort.ans != null) {
+            for (int i = 0; i < sort.ans.size(); i++) {
+                sort_points.put(sorted.get(i), new ActiveVertex(this, i, i * 100,
+                        this.getPreferredSize().height / 2, graph));
+            }
         }
     }
 

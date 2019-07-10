@@ -17,6 +17,11 @@ public class RigthControlPanel extends JPanel {
     private JPanel parent;
     private SourceGraphField graphField;
     private SortedGraphField sortedGraphField;
+    public void setCommentLabel(JLabel commentLabel) {
+        this.commentLabel = commentLabel;
+    }
+
+    private JLabel commentLabel;
     public RigthControlPanel(Graph graph, JPanel parent, SourceGraphField graphField, SortedGraphField sortedGraphField ) {
         this.graphField = graphField;
         this.sortedGraphField = sortedGraphField;
@@ -85,14 +90,9 @@ public class RigthControlPanel extends JPanel {
                 String input = textArea.getText();
                 graph.clear();
                 graphField.repaint();
-                LinkedList<Integer> list = new LinkedList<>();
-                for(int i = 0;i<input.length();i++){
-                    if(Character.isDigit(input.charAt(i))){
-                        list.add(Character.getNumericValue(input.charAt(i)));
-                    }
-                }
-                for(int i = 0;i<list.size()-1;i++){
-                    graph.addE(list.get(i), list.get(i+1));
+                String[] parsed = input.split("[^0-9]");
+                for(int i = 0;i<parsed.length;i++){
+                    graph.addE(Integer.parseInt(parsed[i]), Integer.parseInt(parsed[i+1]));
                     i++;
                 }
                 graphField.repaint();
@@ -109,7 +109,6 @@ public class RigthControlPanel extends JPanel {
 
                     try(BufferedReader reader =new BufferedReader(new FileReader(file)))
                     {
-                        // читаем из файла построчно
                         String line;
                         while ((line = reader.readLine()) != null) {
                             input+=line+"\n";
@@ -125,10 +124,11 @@ public class RigthControlPanel extends JPanel {
         toStartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for(int i = 0;i<graph.V();i++)
-                    graph.checkV(graph.VertexList().get(i)).c = 0;
-                graphField.repaint();
                 topSort.to_start();
+                graphField.repaint();
+                sortedGraphField.setGraph(new Graph());
+                commentLabel.setText("");
+
             }
         });
 
@@ -138,26 +138,26 @@ public class RigthControlPanel extends JPanel {
                 doAllTheSteps();
                 foo();
                 graphField.repaint();
+
             }
         });
 
         step.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(topSort.step() == false){
-                    foo();
+                commentLabel.setText(topSort.step());
+                if (topSort.ans != null) {
+                    sortedGraphField.setGraph(graph);
+                    sortedGraphField.repaint();
                 }
                 graphField.repaint();
-                //foo();
             }
         });
     }
 
     private void foo() {
-        System.out.println("foo called");
         this.sortedGraphField.setGraph(graph);
         this.sortedGraphField.repaint();
-
     }
 
     private void doAllTheSteps() {

@@ -4,16 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Window extends JPanel{
-    Graph graph;
-    TopSort sort;
-    public SourceGraphField graphField;
-    public SortedGraphField sortedGraphField;
+    private Graph graph;
+    private TopSort sort;
+    private SourceGraphField graphField;
+    private SortedGraphField sortedGraphField;
+    private LeftControlPanel leftPanel = new LeftControlPanel();
     ///////////////////////////////
 
     public Window(Graph graph, TopSort sort) {
         this.sort = sort;
         this.graph = graph;
-        graphField = new SourceGraphField(graph);
+        this.graphField = new SourceGraphField(graph);
         //new SourceGraphField(graph);
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new GridBagLayout());
@@ -27,7 +28,7 @@ public class Window extends JPanel{
         constraints.gridx = 0;
         contentPanel.add(graphField, constraints);
 
-        LeftControlPanel leftPanel = new LeftControlPanel();
+
 
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weighty   = 0.3;
@@ -45,6 +46,7 @@ public class Window extends JPanel{
         contentPanel.add(leftPanel, constraints);
 
         RigthControlPanel cp  = new RigthControlPanel(this.graph, contentPanel, graphField, sortedGraphField);
+        cp.setCommentLabel(leftPanel.commentsLabel);
         constraints.gridx = 1;      // первая ячейка таблицы по горизонтали
         constraints.gridy = 0;
         constraints.gridheight = 3;

@@ -27,23 +27,14 @@ public abstract class AbstractGraphField extends JPanel  {
     protected void drawGraph(Graphics g, HashMap<Integer, ActiveVertex> points) {
         Edge edge;
 
-        ActiveVertex i;
-        int av = 0;
-        for (int w = 0; w < points.size(); w++) {
-
-            for ( ; !points.containsKey(av); av++) {};
-            //выбираем из мапы вершин первую, которая там содержится
-            i = points.get(av);
-            av++;
-
-            // boolean inRes = graph.checkV(i.v)!=null ? true : false;
-            //проходим по всем вершинам
+        for (ActiveVertex i: points.values()) {
             for (int j = 0; j < max(graph)+1; j++) {
                 if ( ( edge = graph.checkE(i.v, j)) != null ) {
                     Color color;
                     color = BASE_EDGE_COLOR;
                     drawEdge(g, edge, color, points);
                 }
+
                 if(graph.checkV(i.v).c == 0) {
                     g.setColor(/*inRes ? RESULT_VERTEX_COLOR :*/ BASE_VERTEX_COLOR);
                 }

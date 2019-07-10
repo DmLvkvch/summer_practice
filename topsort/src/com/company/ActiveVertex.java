@@ -69,26 +69,22 @@ public class ActiveVertex extends JPanel implements MouseListener, MouseMotionLi
         }
     }
 
-
-    ///////////////////////////////////////////
-    ///////////////////////////////////////////
-    ///////////////////////////////////////////
-    ///////////////////////////////////////////
-    // Мусорка безполезных функций
     @Override
     public void mouseClicked(MouseEvent e) {
-        stack.push(this);
-        if(stack.size()==2) {
-            int k = stack.peek().v;
-            stack.pop();
-            if (k == stack.peek().v) {
-                graph.removeV(stack.peek().v);
+        if(e.getButton()==MouseEvent.BUTTON1) {
+            stack.push(this);
+            if (stack.size() == 2) {
+                int k = stack.peek().v;
                 stack.pop();
-                parent.repaint();
-            } else {
-                graph.addE(stack.peek().v, k);
-                stack.pop();
-                parent.repaint();
+                if (k == stack.peek().v) {
+                    graph.removeV(stack.peek().v);
+                    stack.pop();
+                    parent.repaint();
+                } else {
+                    graph.addE(stack.peek().v, k);
+                    stack.pop();
+                    parent.repaint();
+                }
             }
         }
     }
