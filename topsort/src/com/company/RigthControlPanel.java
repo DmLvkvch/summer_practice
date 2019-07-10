@@ -133,6 +133,7 @@ public class RigthControlPanel extends JPanel {
                 topSort.to_start();
                 graphField.repaint();
                 sortedGraphField.setGraph(new Graph());
+                commentPane.setText("");
             }
         });
 
