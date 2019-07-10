@@ -18,12 +18,6 @@ public class RigthControlPanel extends JPanel {
     private SourceGraphField graphField;
     private SortedGraphField sortedGraphField;
 
-    public void setCommentLabel(JLabel commentLabel) {
-        this.commentLabel = commentLabel;
-    }
-
-    private JLabel commentLabel;
-
     public void setCommentPane(JTextPane commentPane) {
         this.commentPane = commentPane;
     }

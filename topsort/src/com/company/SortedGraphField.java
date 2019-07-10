@@ -1,5 +1,6 @@
 package com.company;
 
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,12 +12,12 @@ public class SortedGraphField extends AbstractGraphField  {
     private TopSort sort;
     private int z = 0;
     int h = 20;
-    int height = 150;
-    int width = 90;
+
+
+
     public SortedGraphField(Graph graph) {
         super(graph);
-        width = 900;
-        height = 15;
+
         sort = new TopSort(graph);
         LinkedList<Integer> sorted = sort.ans;
         setPreferredSize(new Dimension(900, 150));
@@ -47,8 +48,19 @@ public class SortedGraphField extends AbstractGraphField  {
         h = 20;
         //setPreferredSize(new Dimension(width*sort_points.size(), 150));
         g.setColor(new Color(171,174,181));
-        g.fillRect(0,0, 900,600);
+        g.fillRect(0, 0, this.getPreferredSize().width, this.getPreferredSize().height);
+
+        while (sort_points.size() > this.getPreferredSize().width / 100) {
+            this.setPreferredSize(new Dimension(this.getPreferredSize().width + 100,
+                    this.getPreferredSize().height));
+        }
+        while (sort_points.size() < this.getPreferredSize().width / 100) {
+            this.setPreferredSize(new Dimension(this.getPreferredSize().width - 100,
+                    this.getPreferredSize().height));
+        }
+        this.setSize(this.getPreferredSize());
         drawGraph(g, sort_points);
+
     }
 
     @Override

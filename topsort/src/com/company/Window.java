@@ -34,10 +34,11 @@ public class Window extends JPanel{
         constraints.gridy     = 1;
         sortedGraphField = new SortedGraphField(graph);
         contentPanel.add(sortedGraphField, constraints);
+
         JScrollPane jScrollPane = new JScrollPane(sortedGraphField);
         jScrollPane.setPreferredSize(new Dimension(900,150));
         jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        contentPanel.add(sortedGraphField, constraints);;
+        contentPanel.add(jScrollPane, constraints);
 
 
         leftPanel = new LeftControlPanel();
@@ -48,13 +49,7 @@ public class Window extends JPanel{
 
 
 
-
-
-        //commentsLabel.setPreferredSize(new Dimension(900, 150));
-
-
         RigthControlPanel cp  = new RigthControlPanel(this.graph, contentPanel, graphField, sortedGraphField);
-        cp.setCommentLabel(leftPanel.commentsLabel);
         cp.setCommentPane(leftPanel.commentArea);
         constraints.gridx = 1;      // первая ячейка таблицы по горизонтали
         constraints.gridy = 0;
