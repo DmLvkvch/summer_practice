@@ -8,7 +8,7 @@ public class Window extends JPanel{
     private TopSort sort;
     private SourceGraphField graphField;
     private SortedGraphField sortedGraphField;
-    private LeftControlPanel leftPanel = new LeftControlPanel();
+    private LeftControlPanel leftPanel;
     ///////////////////////////////
 
     public Window(Graph graph, TopSort sort) {
@@ -21,8 +21,6 @@ public class Window extends JPanel{
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.weightx = 0.5;
-        constraints.weighty   = 0.3;
         constraints.gridheight = 1;
         constraints.gridy   = 0  ;
         constraints.gridx = 0;
@@ -31,22 +29,35 @@ public class Window extends JPanel{
 
 
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.weighty   = 0.3;
+        constraints.gridheight = 1;
         constraints.gridx     = 0;
         constraints.gridy     = 1;
         sortedGraphField = new SortedGraphField(graph);
-        contentPanel.add(sortedGraphField, constraints);
+        //contentPanel.add(sortedGraphField, constraints);
+
         JScrollPane jScrollPane = new JScrollPane(sortedGraphField);
         jScrollPane.setPreferredSize(new Dimension(900,150));
         jScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        contentPanel.add(sortedGraphField, constraints);;
+        jScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        contentPanel.add(jScrollPane, constraints);
+
+
+        leftPanel = new LeftControlPanel();
         constraints.weighty   = 0.0;
         constraints.gridx     = 0;
         constraints.gridy     = 2;
         contentPanel.add(leftPanel, constraints);
 
+
+
+
+
+        //commentsLabel.setPreferredSize(new Dimension(900, 150));
+
+
         RigthControlPanel cp  = new RigthControlPanel(this.graph, contentPanel, graphField, sortedGraphField);
-        cp.setCommentLabel(leftPanel.commentsLabel);
+
+        cp.setCommentPane(leftPanel.commentArea);
         constraints.gridx = 1;      // первая ячейка таблицы по горизонтали
         constraints.gridy = 0;
         constraints.gridheight = 3;

@@ -47,8 +47,23 @@ public class SortedGraphField extends AbstractGraphField  {
         h = 20;
         //setPreferredSize(new Dimension(width*sort_points.size(), 150));
         g.setColor(new Color(171,174,181));
-        g.fillRect(0,0, 900,600);
+
+
+        while (sort_points.size() > this.getPreferredSize().width / 100) {
+            this.setPreferredSize(new Dimension(this.getPreferredSize().width + 100,
+                    this.getPreferredSize().height));
+        }
+        while (sort_points.size() < this.getPreferredSize().width / 100) {
+            this.setPreferredSize(new Dimension(this.getPreferredSize().width - 100,
+                    this.getPreferredSize().height));
+        }
+        if (this.getPreferredSize().width < 900) {
+            this.setPreferredSize(new Dimension(900, this.getPreferredSize().height));
+        }
+        this.setSize(this.getPreferredSize());
+        g.fillRect(0, 0, this.getPreferredSize().width, this.getPreferredSize().height);
         drawGraph(g, sort_points);
+
     }
 
     @Override
