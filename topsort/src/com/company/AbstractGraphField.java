@@ -24,43 +24,38 @@ public abstract class AbstractGraphField extends JPanel  {
         return max;
     }
 
-    private void refreshColors() {
-        for (ActiveVertex activeVertex: points.values()) {
-            if(graph.checkV(activeVertex.vertex).c == 0) {
-                points.get(activeVertex.vertex).setColor(/*inRes ? RESULT_VERTEX_COLOR :*/ BASE_VERTEX_COLOR);
-            }
-            if(graph.checkV(activeVertex.vertex).c == 1) {
-                points.get(activeVertex.vertex).setColor(new Color(150,150,150));
-            }
-            if (graph.checkV(activeVertex.vertex).c == 2){
-                points.get(activeVertex.vertex).setColor(new Color(90,200,40));
-            }
-            if (graph.checkV(activeVertex.vertex).c == 3) {
-                points.get(activeVertex.vertex).setColor(new Color(255,0,0));
-            }
-        }
-    }
-
     protected void drawGraph(Graphics g, HashMap<Integer, ActiveVertex> points) {
         Edge edge;
-        refreshColors();
+
         for (ActiveVertex i: points.values()) {
             for (int j = 0; j < max(graph)+1; j++) {
-                if ( ( edge = graph.checkE(i.vertex, j)) != null ) {
+                if ( ( edge = graph.checkE(i.v, j)) != null ) {
                     Color color;
                     color = BASE_EDGE_COLOR;
                     drawEdge(g, edge, color, points);
                 }
+
+                if(graph.checkV(i.v).c == 0) {
+                    g.setColor(/*inRes ? RESULT_VERTEX_COLOR :*/ BASE_VERTEX_COLOR);
+                }
+                if(graph.checkV(i.v).c == 1) {
+                    g.setColor(new Color(150,150,150));
+                }
+                if (graph.checkV(i.v).c == 2){
+                    g.setColor(new Color(90,200,40));
+                }
+                if (graph.checkV(i.v).c == 3){
+                    g.setColor(new Color(190,0,40));
+                }
+                drawVertex(g, i.v, points);
             }
         }
-
     }
-
     protected abstract void drawEdge(Graphics g, Edge edge, Color color,HashMap<Integer, ActiveVertex> points);
     abstract void drawArrow(Graphics g, Point source, Point drain);
     protected void drawVertex(Graphics g, int v, HashMap<Integer, ActiveVertex> points) {
-        drawCircle(g, points.get(v).getCenter().x,  points.get(v).getCenter().y, VERTEX_R);
-        drawInt(g, points.get(v).getCenter().x, points.get(v).getCenter().y, v);
+        drawCircle(g, points.get(v).point.x,  points.get(v).point.y, VERTEX_R);
+        drawInt(g, points.get(v).point.x, points.get(v).point.y, v);
     }
 
     private void drawInt(Graphics g, int x, int y, int text) {

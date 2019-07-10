@@ -1,9 +1,4 @@
 package com.company;
-
-import java.awt.*;
-
-import static com.company.PAR_S.*;
-
 public class Edge {
         public Edge(int v1, int v2) {
             this.v1 = v1;

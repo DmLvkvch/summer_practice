@@ -24,6 +24,11 @@ public class RigthControlPanel extends JPanel {
 
     private JLabel commentLabel;
 
+    public void setCommentPane(JTextPane commentPane) {
+        this.commentPane = commentPane;
+    }
+
+    private JTextPane commentPane;
     public RigthControlPanel(Graph graph, JPanel parent, SourceGraphField graphField, SortedGraphField sortedGraphField ) {
         this.graphField = graphField;
         this.sortedGraphField = sortedGraphField;
@@ -44,6 +49,7 @@ public class RigthControlPanel extends JPanel {
         JButton readFromFile = new JButton("read form file");
         JButton CreateGraph = new JButton("create graph");
         JButton toStartButton = new JButton("Go back to start");
+        JButton stepBack = new JButton("Undo");
 
 
 
@@ -75,6 +81,9 @@ public class RigthControlPanel extends JPanel {
         toStartButton.setSize(buttonSize);
         toStartButton.setLocation(step.getX() + step.getWidth() + 10, step.getY());
 
+        stepBack.setSize(buttonSize);
+        stepBack.setLocation(runAlg.getX(), this.getPreferredSize().height - step.getHeight() - 10 - stepBack.getHeight() - 10 - runAlg.getHeight() - 10);
+
 
         this.add(jsp);
         this.add(textFieldLabel);
@@ -84,6 +93,7 @@ public class RigthControlPanel extends JPanel {
         this.add(toStartButton);
         this.add(readFromFile);
         this.add(CreateGraph);
+        this.add(stepBack);
         //this.add(textArea);
         TopSort topSort = new TopSort(graph);
         CreateGraph.addActionListener(new ActionListener() {
@@ -92,14 +102,9 @@ public class RigthControlPanel extends JPanel {
                 String input = textArea.getText();
                 graph.clear();
                 graphField.repaint();
-                LinkedList<Integer> list = new LinkedList<>();
-                for(int i = 0;i<input.length();i++){
-                    if(Character.isDigit(input.charAt(i))){
-                        list.add(Character.getNumericValue(input.charAt(i)));
-                    }
-                }
-                for(int i = 0;i<list.size()-1;i++){
-                    graph.addE(list.get(i), list.get(i+1));
+                String[] parsed = input.split("[^0-9]");
+                for(int i = 0;i<parsed.length;i++){
+                    graph.addE(Integer.parseInt(parsed[i]), Integer.parseInt(parsed[i+1]));
                     i++;
                 }
                 graphField.repaint();
@@ -116,7 +121,6 @@ public class RigthControlPanel extends JPanel {
 
                     try(BufferedReader reader =new BufferedReader(new FileReader(file)))
                     {
-                        // читаем из файла построчно
                         String line;
                         while ((line = reader.readLine()) != null) {
                             input+=line+"\n";
@@ -134,7 +138,9 @@ public class RigthControlPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 topSort.to_start();
                 graphField.repaint();
-                commentLabel.setText("");
+                sortedGraphField.setGraph(new Graph());
+
+                //.setText("");
 
             }
         });
@@ -152,11 +158,14 @@ public class RigthControlPanel extends JPanel {
         step.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                commentLabel.setText(topSort.step());
+               // commentLabel.setText(topSort.step());
+                String comment = topSort.step() + "\r\n";
+                commentPane.setText(commentPane.getText() + comment);
                 if (topSort.ans != null) {
                     sortedGraphField.setGraph(graph);
                     sortedGraphField.repaint();
                 }
+                graphField.repaint();
             }
         });
     }

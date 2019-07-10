@@ -22,11 +22,8 @@ public class SortedGraphField extends AbstractGraphField  {
         setPreferredSize(new Dimension(900, 150));
         if (sort.ans != null) {
             for (int i = 0; i < sort.ans.size(); i++) {
-                ActiveVertex activeVertex = new ActiveVertex(this, i, i * 100,
-                        this.getPreferredSize().height / 2, graph);
-                activeVertex.setClickable(false);
-                activeVertex.setMoveable(false);
-                sort_points.put(sorted.get(i), activeVertex);
+                sort_points.put(sorted.get(i), new ActiveVertex(this, i, i * 100,
+                        this.getPreferredSize().height / 2, graph));
             }
         }
     }
@@ -36,15 +33,10 @@ public class SortedGraphField extends AbstractGraphField  {
         this.graph = graph;
         sort.alg(graph);
         LinkedList<Integer> sorted = sort.ans;
-        if (sorted == null)
-            return;
         sort_points.clear();
         for (int i = 0; i < sorted.size(); i++) {
-            ActiveVertex activeVertex = new ActiveVertex(this, sorted.get(i), i * 100 + VERTEX_D,
-                    this.getPreferredSize().height / 2, graph);
-            sort_points.put(sorted.get(i), activeVertex);
-            activeVertex.setClickable(false);
-            activeVertex.setMoveable(false);
+            sort_points.put(sorted.get(i), new ActiveVertex(this, sorted.get(i), i * 100 + VERTEX_D,
+                    this.getPreferredSize().height / 2, graph));
         }
         repaint();
     }
@@ -56,14 +48,13 @@ public class SortedGraphField extends AbstractGraphField  {
         //setPreferredSize(new Dimension(width*sort_points.size(), 150));
         g.setColor(new Color(171,174,181));
         g.fillRect(0,0, 900,600);
-        paintChildren(g);
         drawGraph(g, sort_points);
     }
 
     @Override
     protected void drawEdge(Graphics g, Edge edge, Color color, HashMap<Integer, ActiveVertex> points) {
-        Point v1 = new Point(points.get(edge.v1).getCenter().x, points.get(edge.v1).getCenter().y);
-        Point v2 = new Point(points.get(edge.v2).getCenter().x, points.get(edge.v2).getCenter().y);
+        Point v1 = new Point(points.get(edge.v1).point.x, points.get(edge.v1).point.y);
+        Point v2 = new Point(points.get(edge.v2).point.x, points.get(edge.v2).point.y);
         ((Graphics2D)g).setStroke( EDGE_LINE_THIKNESS );  // Устанавливаем толщину ребра
         g.setColor( Color.BLACK );
         drawArrow(g, v1, v2);
