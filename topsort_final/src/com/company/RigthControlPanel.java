@@ -96,15 +96,19 @@ public class RigthControlPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String input = textArea.getText();
-                graph.clear();
-                graphField.repaint();
                 if (input.length() != 0) {
+                    graph.clear();
+                    graphField.repaint();
                     String[] parsed = input.split("[^0-9]");
                     for (int i = 0; i < parsed.length-1; i++) {
                         graph.addE(Integer.parseInt(parsed[i]), Integer.parseInt(parsed[i + 1]));
                         i+=2;
                     }
+                    commentPane.setText(commentPane.getText());
                     graphField.repaint();
+                }
+                else{
+                    commentPane.setText(commentPane.getText()+"Empty\n");
                 }
             }
         });
@@ -144,8 +148,8 @@ public class RigthControlPanel extends JPanel {
         runAlg.addActionListener(e -> {
             doAllTheSteps();
             foo();
+            commentPane.setText(topSort.alg());
             graphField.repaint();
-
         });
 
         step.addActionListener(new ActionListener() {
@@ -176,6 +180,7 @@ public class RigthControlPanel extends JPanel {
     }
 
     private void foo() {
+
         this.sortedGraphField.setGraph(graph);
         this.sortedGraphField.repaint();
     }

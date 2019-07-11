@@ -13,11 +13,6 @@ public class TopSort {
     public LinkedList<Integer> ans = null;
     private Stack<DFSState> states = new Stack<>();
     private LinkedList<Integer> list = new LinkedList<>();
-
-    public LinkedList<Integer> getCycle() {
-        return cycle;
-    }
-
     private LinkedList<Integer> cycle = new LinkedList<>();
     private int exit_num = 0;
     public TopSort(Graph g) {
@@ -29,13 +24,16 @@ public class TopSort {
         stack = new Stack<>();
     }
 
-    boolean alg() {
+    String alg() {
+        list.clear();
         this.exit_num = 0;
         boolean Cycle = false;
         for (int i = 0; i < graph.V(); i++) {
-            Cycle = DFS(graph.VertexList().get(i));
-            if (Cycle) {
-                return false;
+            try {
+                Cycle = DFS(graph.VertexList().get(i));
+            }
+            catch (RuntimeException e){
+                return "CYCLE "+e.getMessage();
             }
         }
         int k = stack.size();
@@ -44,7 +42,7 @@ public class TopSort {
             ans.add(stack.peek());
             stack.pop();
         }
-        return true;
+        return "";
     }
 
     private boolean DFS(int v) {
@@ -56,8 +54,11 @@ public class TopSort {
                 graph.checkV(list.get(i)).c = RED;
                 i--;
             }
-            System.out.println("CYCLE: " + v);
-            return true;
+            LinkedList<Integer> tmp = new LinkedList<>();
+            tmp = reverse(list);
+            throw new RuntimeException(tmp.toString());
+           // System.out.println("CYCLE: " + v);
+            //return true;
         }
         if (graph.checkV(v).c == BLACK) {
             return false;
@@ -224,6 +225,7 @@ public class TopSort {
         stack.clear();
         list.clear();
         graph.getEdges().clear();
+        cycle.clear();
         this.exit_num = 0;
         for (Integer vertex : graph.VertexList()) {
             graph.checkV(vertex).c = WHITE;
