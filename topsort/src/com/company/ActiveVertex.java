@@ -86,12 +86,19 @@ public class ActiveVertex extends JPanel implements MouseListener, MouseMotionLi
                 int k = stack.peek().v;
                 stack.pop();
                 if (k == stack.peek().v) {
+                    if (parent instanceof SourceGraphField) {
+                        ((SourceGraphField) parent).addActionToStack(
+                                new RemoveVertexAction(graph,  stack.peek()));
+                    }
                     graph.removeV(stack.peek().v);
                     cur_ver.clear();
                     color_stack.clear();
                     stack.pop();
                     parent.repaint();
                 } else {
+                    if (parent instanceof SourceGraphField) {
+                        ((SourceGraphField) parent).addActionToStack(new AddEdgeAction(graph, new Edge(stack.peek().v, k)));
+                    }
                     graph.addE(stack.peek().v, k);
                     stack.pop();
                     if(cur_ver.size()!=0){

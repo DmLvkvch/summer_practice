@@ -163,7 +163,7 @@ public class RigthControlPanel extends JPanel {
         stepBack.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                graphField.cancel();
             }
         });
     }

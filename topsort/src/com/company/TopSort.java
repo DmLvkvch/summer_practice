@@ -1,10 +1,9 @@
 package com.company;
 
-import javax.swing.*;
+
 import java.util.*;
 
 public class TopSort {
-    private LeftControlPanel leftControlPanel = new LeftControlPanel();
     private Graph graph;
     private final static int WHITE = 0;
     private final static int GREY = 1;
@@ -14,10 +13,13 @@ public class TopSort {
     public LinkedList<Integer> ans = null;
     private Stack<DFSState> states = new Stack<>();
     private LinkedList<Integer> list = new LinkedList<>();
+
+    public LinkedList<Integer> getCycle() {
+        return cycle;
+    }
+
     private LinkedList<Integer> cycle = new LinkedList<>();
-    public LinkedList<Edge> edges = new LinkedList<>();
     private int exit_num = 0;
-    private int timeOfEntry = 1;
     public TopSort(Graph g) {
         graph = g;
         init();
@@ -37,6 +39,7 @@ public class TopSort {
             }
         }
         int k = stack.size();
+        ans = new LinkedList<>();
         for (int i = 0; i < k; i++) {
             ans.add(stack.peek());
             stack.pop();

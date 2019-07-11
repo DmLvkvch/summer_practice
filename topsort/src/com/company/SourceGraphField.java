@@ -9,6 +9,7 @@ import java.util.*;
 import static com.company.PAR_S.*;
 
 public class SourceGraphField extends AbstractGraphField implements MouseListener, MouseMotionListener {
+    private Stack<AbstractAction> actionStack = new Stack<>();
     private TopSort topSort;
     SourceGraphField(Graph graph, TopSort topSort) {
         super(graph);
@@ -140,10 +141,6 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
         return max;
     }
 
-    boolean onEdge(int x, int y){
-        return  true;
-    }
-
     @Override
     public void mouseClicked(MouseEvent e) {
         int source = 0, stock = 0;
@@ -164,13 +161,18 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
                     }
                 }
             }
-            if(graph.checkE(source, stock)!=null)
+            if (graph.checkE(source, stock)!=null) {
+                actionStack.push(new DeleteEdgeAction(graph, graph.checkE(source, stock)));
                 graph.removeE(source, stock);
+            }
+
             repaint();
         }else {
             int k = max(graph) + 1;
             graph.addV(k);
-            points.put(k, new ActiveVertex(this, k, e.getX(), e.getY(), graph));
+            ActiveVertex activeVertex = new ActiveVertex(this, k, e.getX(), e.getY(), graph);
+            actionStack.push(new AddVertexAction(graph, activeVertex));
+            points.put(k, activeVertex);
             add(points.get(k));
             repaint();
         }
@@ -184,6 +186,20 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
     }
     @Override
     public void mouseMoved(MouseEvent e) {
+
+    }
+
+
+    public void addActionToStack(AbstractAction action) {
+        actionStack.push(action);
+    }
+
+    public void cancel() {
+        if (!actionStack.empty()) {
+            AbstractAction action = actionStack.pop();
+            action.cancel();
+            this.repaint();
+        }
 
     }
 }
