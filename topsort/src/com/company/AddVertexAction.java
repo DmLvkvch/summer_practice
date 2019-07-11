@@ -15,4 +15,13 @@ public class AddVertexAction extends AbstractAction{
             activeVertex.parent.remove(activeVertex);
         }
     }
+
+    @Override
+    public void redo() {
+        graph.addV(activeVertex.v);
+        if (activeVertex.parent instanceof SourceGraphField) {
+            ((SourceGraphField) activeVertex.parent).points.put(activeVertex.v, activeVertex);
+            activeVertex.parent.add(activeVertex);
+        }
+    }
 }

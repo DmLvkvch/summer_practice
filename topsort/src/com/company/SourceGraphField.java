@@ -9,7 +9,8 @@ import java.util.*;
 import static com.company.PAR_S.*;
 
 public class SourceGraphField extends AbstractGraphField implements MouseListener, MouseMotionListener {
-    private Stack<AbstractAction> actionStack = new Stack<>();
+    private Stack<AbstractAction> doneActionsStack = new Stack<>();
+    private Stack<AbstractAction> undoneActionsStack = new Stack<>();
     private TopSort topSort;
     SourceGraphField(Graph graph, TopSort topSort) {
         super(graph);
@@ -162,7 +163,7 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
                 }
             }
             if (graph.checkE(source, stock)!=null) {
-                actionStack.push(new DeleteEdgeAction(graph, graph.checkE(source, stock)));
+                doneActionsStack.push(new DeleteEdgeAction(graph, graph.checkE(source, stock)));
                 graph.removeE(source, stock);
             }
 
@@ -171,7 +172,7 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
             int k = max(graph) + 1;
             graph.addV(k);
             ActiveVertex activeVertex = new ActiveVertex(this, k, e.getX(), e.getY(), graph);
-            actionStack.push(new AddVertexAction(graph, activeVertex));
+            doneActionsStack.push(new AddVertexAction(graph, activeVertex));
             points.put(k, activeVertex);
             add(points.get(k));
             repaint();
@@ -191,13 +192,22 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
 
 
     public void addActionToStack(AbstractAction action) {
-        actionStack.push(action);
+        doneActionsStack.push(action);
     }
 
-    public void cancel() {
-        if (!actionStack.empty()) {
-            AbstractAction action = actionStack.pop();
+    public void undo() {
+        if (!doneActionsStack.empty()) {
+            AbstractAction action = doneActionsStack.pop();
+            undoneActionsStack.push(action);
             action.cancel();
+            this.repaint();
+        }
+    }
+    public void redo() {
+        if (!undoneActionsStack.empty()) {
+            AbstractAction action = undoneActionsStack.pop();
+            doneActionsStack.push(action);
+            action.redo();
             this.repaint();
         }
 

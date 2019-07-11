@@ -17,7 +17,7 @@ public class RigthControlPanel extends JPanel {
     private JPanel parent;
     private SourceGraphField graphField;
     private SortedGraphField sortedGraphField;
-    public Stack<Graph> stack = new Stack<>();
+
     private JTextPane commentPane;
     public void setCommentPane(JTextPane commentPane) {
         this.commentPane = commentPane;
@@ -43,8 +43,8 @@ public class RigthControlPanel extends JPanel {
         JButton readFromFile = new JButton("read form file");
         JButton CreateGraph = new JButton("create graph");
         JButton toStartButton = new JButton("Go back to start");
-        JButton stepBack = new JButton("Cancel last action on graph field");
-
+        JButton stepBack = new JButton("Undo last action on graph field");
+        JButton stepForward = new JButton("Redo last action on graph field");
 
         textFieldLabel.setSize(550, 25);
         textFieldLabel.setLocation((getPreferredSize().width - textFieldLabel.getSize().width) / 2,0);
@@ -77,6 +77,9 @@ public class RigthControlPanel extends JPanel {
         stepBack.setSize(buttonSize);
         stepBack.setLocation(runAlg.getX(), this.getPreferredSize().height - step.getHeight() - 10 - stepBack.getHeight() - 10 - runAlg.getHeight() - 10);
 
+        stepForward.setSize(buttonSize);
+        stepForward.setLocation(toStartButton.getX(), stepBack.getY());
+
         this.add(jsp);
         this.add(textFieldLabel);
         this.add(addEdge);
@@ -86,6 +89,7 @@ public class RigthControlPanel extends JPanel {
         this.add(readFromFile);
         this.add(CreateGraph);
         this.add(stepBack);
+        this.add(stepForward);
         //this.add(textArea);
         TopSort topSort = new TopSort(graph);
         CreateGraph.addActionListener(new ActionListener() {
@@ -137,14 +141,11 @@ public class RigthControlPanel extends JPanel {
             }
         });
 
-        runAlg.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doAllTheSteps();
-                foo();
-                graphField.repaint();
+        runAlg.addActionListener(e -> {
+            doAllTheSteps();
+            foo();
+            graphField.repaint();
 
-            }
         });
 
         step.addActionListener(new ActionListener() {
@@ -163,7 +164,13 @@ public class RigthControlPanel extends JPanel {
         stepBack.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                graphField.cancel();
+                graphField.undo();
+            }
+        });
+        stepForward.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                graphField.redo();
             }
         });
     }

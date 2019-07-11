@@ -11,4 +11,9 @@ public class DeleteEdgeAction extends AbstractAction {
     public void cancel() {
         this.graph.addE(edge.v1, edge.v2);
     }
+
+    @Override
+    public void redo() {
+        this.graph.removeE(edge.v1, edge.v2);
+    }
 }

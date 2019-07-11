@@ -8,4 +8,5 @@ public abstract class AbstractAction {
     }
 
     abstract public void cancel();
+    abstract public void redo();
 }

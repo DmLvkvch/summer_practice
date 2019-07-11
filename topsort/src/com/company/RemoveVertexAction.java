@@ -16,4 +16,13 @@ public class RemoveVertexAction extends AbstractAction {
             activeVertex.parent.add(activeVertex);
         }
     }
+
+    @Override
+    public void redo() {
+        graph.removeV(activeVertex.v);
+        if (activeVertex.parent instanceof SourceGraphField) {
+            ((SourceGraphField) activeVertex.parent).points.remove(activeVertex.v);
+            activeVertex.parent.remove(activeVertex);
+        }
+    }
 }
