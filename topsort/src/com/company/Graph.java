@@ -37,6 +37,7 @@ public class Graph {
         graph.clear();
         VCount = ECount = 0;
         vertexes.clear();
+        edges.clear();
     }
 
     public void removeV(int v){

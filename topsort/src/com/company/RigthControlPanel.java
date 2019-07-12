@@ -97,7 +97,9 @@ public class RigthControlPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String input = textArea.getText();
                 graph.clear();
+
                 graphField.repaint();
+
                 if (input.length() != 0) {
                     String[] parsed = input.split("[^0-9]");
                     for (int i = 0; i < parsed.length; i++) {
@@ -109,9 +111,12 @@ public class RigthControlPanel extends JPanel {
             }
         });
 
+
+
         readFromFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                input = new String();
                 JFileChooser fd = new JFileChooser();//диалоговое окно
                 int ret = fd.showDialog(null, "Open file");
                 if (ret == JFileChooser.APPROVE_OPTION) {
@@ -178,6 +183,9 @@ public class RigthControlPanel extends JPanel {
     private void foo() {
         this.sortedGraphField.setGraph(graph);
         this.sortedGraphField.repaint();
+    }
+    public void setGraph(Graph graph) {
+        this.graph = graph;
     }
 
     private void doAllTheSteps() {

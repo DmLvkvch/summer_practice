@@ -69,9 +69,11 @@ public class SourceGraphField extends AbstractGraphField implements MouseListene
                     if(graph.getEdges().get(getIndex(graph.getEdges(), edge)).c == 1)
                         g.setColor(new Color(40, 80, 200));
                     if(graph.getEdges().get(getIndex(graph.getEdges(), edge)).c == 2)
-                        g.setColor(new Color(100, 100, 0));
+                        g.setColor(new Color(255, 0, 255));
                     if(graph.getEdges().get(getIndex(graph.getEdges(), edge)).c == 3)
-                        g.setColor(new Color(200, 200, 100));
+                        g.setColor(new Color(255, 255, 0));
+                    if(graph.getEdges().get(getIndex(graph.getEdges(), edge)).c == 4)
+                        g.setColor(new Color(0, 255, 0));
                 }
         }
         if (graph.checkV(edge.v1).c == 3 & graph.checkV(edge.v2).c == 3)

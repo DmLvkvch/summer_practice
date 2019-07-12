@@ -98,7 +98,7 @@ public class TopSort {
         DFSState state = states.pop();
         if (graph.checkV(state.vertex).c == RED) {
             ans = null;
-            return "Шаг невозможен: цикл ";
+            return "Шаг невозможен: цикл был найден ранеее";
         }
         if (graph.checkV(state.vertex).c == BLACK) {
             return "зашли в черную вершину " + state.vertex;
@@ -126,7 +126,7 @@ public class TopSort {
                 graph.getEdges().add(new Edge(list.get(list.size()-2), list.get(list.size()-1), 3));
                 if(graph.getEdges().size()>1){
                     for(int i = 0;i<graph.getEdges().size()-1;i++) {
-                        if(graph.getEdges().get(i).c!=2)
+                        if(graph.getEdges().get(i).c !=2 && graph.getEdges().get(i).c != 4)
                             graph.getEdges().get(i).c = 1;
                     }
                 }
@@ -150,9 +150,20 @@ public class TopSort {
         // вернулиись из следующей
         if (state.nextChild < graph.checkV(state.vertex).way.size()) {
 
+/*
+            if (graph.checkV(state.nextChild).c == BLACK) {
+                graph.getEdges().add(new Edge(state.vertex, graph.checkV(state.vertex).way.get(state.nextChild), 4));
+                states.push(new DFSState(graph.checkV(state.vertex).way.get(state.nextChild), 0));
+                System.out.println("Pushing " + states.peek());
+                return "На этом шаге красим ребро (" + state.vertex + "; "
+                        + graph.checkV(state.vertex).way.get(state.nextChild) + ") в зеленый цвет, потому что вершина "
+                        + graph.checkV(state.vertex).way.get(state.nextChild) + " черная";
+                //graph.getEdges().get(graph.getEdges().indexOf(new Edge(state.vertex, state.nextChild))).c = 4;
+            }
+
+*/
             states.push(new DFSState(state.vertex, state.nextChild + 1));
             System.out.println("Pushing " + states.peek());
-
             states.push(new DFSState(graph.checkV(state.vertex).way.get(state.nextChild), 0));
             System.out.println("Pushing " + states.peek());
             return "На этом шаге красить вершину " + state.vertex + " в зеленый нельзя, потому что у нее есть непросмотренные из нее потомки";
@@ -173,7 +184,10 @@ public class TopSort {
         if (graph.checkV(state.vertex).way.size() == 0) {
             return "красим вершину " + state.vertex + " в зеленый цвет, потому что у нее нет потомков. В отсортированном графе она будет "+(exit_num)+" справа.";
         } else {
-            return "красим вершину " + state.vertex + " в зеленый цвет, потому что все ее потомки посещены. В отсортированном графе она будет "+(exit_num)+" справа.";
+            for (Integer i: graph.checkV(state.vertex).way) {
+                graph.getEdges().add(new Edge(state.vertex, graph.checkV(i).v, 4));
+            }
+            return "красим все непройденные исходящие ребра вершины "  + state.vertex + " в зеленый, потому что все ее потомки зеленые";
         }
     }
 
