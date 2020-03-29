@@ -1,1 +1,0 @@
-java -jar C:\Users\dima2\IdeaProjects\topsort\out\artifacts\topsort_jar\topsort.jar
